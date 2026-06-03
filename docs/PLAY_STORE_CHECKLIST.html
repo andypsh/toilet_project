@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>비데앱 Play Store 배포 체크리스트</title>
+<style>
+  :root {
+    --bg: #0f1419;
+    --card: #1a1f2e;
+    --border: #2a3142;
+    --text: #e6e8ed;
+    --muted: #8a93a6;
+    --accent: #7dd3fc;
+    --done: #4ade80;
+    --me: #a78bfa;
+    --you: #fbbf24;
+    --both: #fb7185;
+    --code-bg: #0a0e15;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px 20px 80px;
+  }
+  h1 {
+    font-size: 28px;
+    margin: 0 0 4px;
+  }
+  .subtitle {
+    color: var(--muted);
+    margin-bottom: 32px;
+    font-size: 14px;
+  }
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+    padding: 12px 16px;
+    background: var(--card);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .legend span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .chip {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+  .chip-me { background: rgba(167, 139, 250, 0.15); color: var(--me); border: 1px solid rgba(167, 139, 250, 0.3); }
+  .chip-you { background: rgba(251, 191, 36, 0.15); color: var(--you); border: 1px solid rgba(251, 191, 36, 0.3); }
+  .chip-both { background: rgba(251, 113, 133, 0.15); color: var(--both); border: 1px solid rgba(251, 113, 133, 0.3); }
+  .chip-done { background: rgba(74, 222, 128, 0.15); color: var(--done); border: 1px solid rgba(74, 222, 128, 0.3); }
+
+  .step {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+    margin-bottom: 14px;
+    position: relative;
+  }
+  .step.done {
+    opacity: 0.6;
+  }
+  .step.done h2 {
+    text-decoration: line-through;
+    text-decoration-color: var(--done);
+  }
+  .step h2 {
+    font-size: 18px;
+    margin: 0 0 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .step-num {
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    background: var(--border);
+    color: var(--accent);
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .step .why {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 12px;
+  }
+  .step ul {
+    margin: 8px 0 0;
+    padding-left: 22px;
+  }
+  .step li {
+    margin: 6px 0;
+  }
+  code, pre {
+    font-family: "JetBrains Mono", Consolas, "Courier New", monospace;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--accent);
+    font-size: 13px;
+  }
+  code { padding: 2px 6px; }
+  pre {
+    padding: 12px 14px;
+    overflow-x: auto;
+    line-height: 1.5;
+    margin: 10px 0;
+  }
+  pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--text);
+  }
+  a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--accent);
+  }
+  a:hover { border-bottom-style: solid; }
+  .warn {
+    background: rgba(251, 113, 133, 0.08);
+    border-left: 3px solid var(--both);
+    padding: 10px 14px;
+    margin: 12px 0;
+    font-size: 13px;
+    border-radius: 4px;
+  }
+  .info {
+    background: rgba(125, 211, 252, 0.08);
+    border-left: 3px solid var(--accent);
+    padding: 10px 14px;
+    margin: 12px 0;
+    font-size: 13px;
+    border-radius: 4px;
+  }
+  .section-title {
+    font-size: 13px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 36px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .summary-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    text-align: center;
+  }
+  .summary-card .num {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .summary-card .label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  @media (max-width: 600px) {
+    .summary { grid-template-columns: 1fr; }
+    body { padding: 16px 14px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<h1>비데앱 Play Store 배포 체크리스트</h1>
+<div class="subtitle">총 9단계 · 작성 2026-06-03</div>
+
+<div class="legend">
+  <span><span class="chip chip-me">CLAUDE</span> 내가 자동으로 가능</span>
+  <span><span class="chip chip-you">YOU</span> 너만 가능 (계정/지갑/브라우저)</span>
+  <span><span class="chip chip-both">BOTH</span> 같이 진행</span>
+  <span><span class="chip chip-done">DONE</span> 완료</span>
+</div>
+
+<div class="summary">
+  <div class="summary-card"><div class="num">1</div><div class="label">완료</div></div>
+  <div class="summary-card"><div class="num">8</div><div class="label">남음</div></div>
+  <div class="summary-card"><div class="num">~$25</div><div class="label">예상 비용</div></div>
+</div>
+
+<div class="section-title">완료</div>
+
+<div class="step done">
+  <h2><span class="step-num">6</span>개인정보처리방침 초안<span class="chip chip-done">DONE</span></h2>
+  <div class="why">위치권한 + Firebase Auth 쓰면 Play Console 필수 자료</div>
+  <ul>
+    <li>초안 위치: <code>docs/PRIVACY.md</code></li>
+    <li><strong>너가 마무리할 것:</strong> 상단 "운영자 이름"과 "문의 이메일" 채우기 (가짜 넣으면 심사 거부됨)</li>
+    <li>호스팅: GitHub Pages 또는 Notion 공개 페이지 → 공개 URL 확보 필요</li>
+  </ul>
+</div>
+
+<div class="section-title">진행 필요 — 코드/키 단계</div>
+
+<div class="step">
+  <h2><span class="step-num">1</span>릴리즈 키스토어 생성<span class="chip chip-you">YOU</span></h2>
+  <div class="why">앱 서명용 .jks 파일. 비번을 내 컨텍스트에 남기지 않으려면 네가 직접 실행 추천.</div>
+  <pre><code>cd C:\Users\andyp\Desktop\고려대\비데앱\mobile
+.\scripts\create_keystore.ps1</code></pre>
+  <ul>
+    <li>대화형으로 비번 2개 (storePassword, keyPassword) 입력</li>
+    <li>이름/조직/도시 등은 아무거나 입력해도 됨</li>
+    <li>완료 후 <code>keystore.properties.example</code>을 <code>keystore.properties</code>로 복사하고 비번 채우기</li>
+  </ul>
+  <div class="warn"><strong>⚠️ 절대 잃지 말 것:</strong> .jks 파일 + 비번 둘 다. 분실 시 같은 패키지명으로 영구 업데이트 불가. 외장하드 또는 1Password에 백업.</div>
+</div>
+
+<div class="step">
+  <h2><span class="step-num">2</span>Firebase 프로젝트 연결<span class="chip chip-you">YOU</span></h2>
+  <div class="why">현재 <code>DEMO_MODE=true</code>. 실제 서비스 출시하려면 진짜 Firebase 연결 필수.</div>
+  <ul>
+    <li><a href="https://console.firebase.google.com" target="_blank">console.firebase.google.com</a> → 새 프로젝트 생성</li>
+    <li>Android 앱 추가 → 패키지명 <code>com.bidet.app</code></li>
+    <li>릴리즈 SHA-1 등록 (#1 완료 후 내가 추출해줌)</li>
+    <li><code>google-services.json</code> 다운로드 → <code>mobile/app/</code> 에 배치</li>
+    <li>Firestore + Authentication(Google, Kakao 둘 다) + Storage + Analytics 활성화</li>
+    <li>Firestore 보안 규칙: 프로덕션 모드로</li>
+  </ul>
+</div>
+
+<div class="step">
+  <h2><span class="step-num">3</span>카카오 개발자 콘솔 릴리즈 키해시 등록<span class="chip chip-you">YOU</span></h2>
+  <div class="why">디버그 키해시만 등록돼 있으면 릴리즈 빌드에서 카카오맵/로그인이 깨짐.</div>
+  <ul>
+    <li><a href="https://developers.kakao.com" target="_blank">developers.kakao.com</a> → 내 애플리케이션 → 비데앱</li>
+    <li>플랫폼 → Android → 키해시 추가 (#1 완료 후 내가 base64 변환해줌)</li>
+    <li>"카카오 로그인" 기능 활성화 확인</li>
+    <li>카카오맵 SDK Native App Key가 <code>mobile/local.properties</code> 에 들어있는지 확인</li>
+  </ul>
+</div>
+
+<div class="step">
+  <h2><span class="step-num">4</span>Google Cloud OAuth 릴리즈 SHA-1 등록<span class="chip chip-you">YOU</span></h2>
+  <div class="why">Google Sign-In용. Firebase가 자동으로 만든 OAuth 클라이언트에 릴리즈 SHA-1 추가해야 함.</div>
+  <ul>
+    <li><a href="https://console.cloud.google.com/apis/credentials" target="_blank">console.cloud.google.com/apis/credentials</a></li>
+    <li>Firebase 프로젝트와 동일한 GCP 프로젝트 선택</li>
+    <li>OAuth 2.0 클라이언트 ID (Android 타입) 편집 → SHA-1 인증서 지문에 릴리즈용 추가</li>
+    <li>웹 클라이언트 ID는 <code>mobile/local.properties</code>의 <code>GOOGLE_WEB_CLIENT_ID</code>에 이미 있어야 함</li>
+  </ul>
+</div>
+
+<div class="step">
+  <h2><span class="step-num">5</span>릴리즈 AAB 빌드 + 실기기 테스트<span class="chip chip-both">BOTH</span></h2>
+  <div class="why">#1~#4 완료 후 빌드 가능. AAB는 직접 설치 불가 → bundletool로 APK 추출 후 실기기에서 검증.</div>
+  <pre><code>cd mobile
+.\gradlew bundleRelease
+# 결과: mobile/app/build/outputs/bundle/release/app-release.aab</code></pre>
+  <ul>
+    <li><strong>내가 가능:</strong> 빌드 명령 실행, 에러 디버깅, 결과물 위치 확인</li>
+    <li><strong>너만 가능:</strong> 폰 USB 연결, 실기기에서 골든패스 (로그인 → 위치권한 → 지도 → POI 확인 → 제보·리뷰)</li>
+  </ul>
+  <div class="info">bundletool 설치: <code>winget install Google.BundleTool</code> 또는 GitHub releases에서 jar 다운로드</div>
+</div>
+
+<div class="section-title">진행 필요 — Play Console 단계</div>
+
+<div class="step">
+  <h2><span class="step-num">8</span>Google Play 개발자 계정 등록<span class="chip chip-you">YOU</span></h2>
+  <div class="why">앱 업로드 전제조건. 신규 개인 계정이면 비공개 테스트 14일 필수.</div>
+  <ul>
+    <li><a href="https://play.google.com/console/signup" target="_blank">play.google.com/console/signup</a></li>
+    <li>$25 일회성 결제 (신용카드)</li>
+    <li>신분 확인 (여권 또는 신분증)</li>
+    <li>개인 / 단체 선택 — 개인이면 신규 정책상 14일 비공개 테스트 + 테스터 12명 이상 필수</li>
+  </ul>
+  <div class="warn">고려대 프로젝트라 단체로 등록한다면 사업자 정보 필요 — 학생/개인이면 그냥 개인 계정</div>
+</div>
+
+<div class="step">
+  <h2><span class="step-num">7</span>스토어 등재 자료 준비<span class="chip chip-both">BOTH</span></h2>
+  <div class="why">앱 페이지에 노출될 이미지/카피. 부실하면 심사 통과해도 다운로드 안 받음.</div>
+  <ul>
+    <li><strong>아이콘:</strong> 512×512 PNG (현재 <code>mipmap-anydpi-v26/ic_launcher.xml</code> 기반으로 추출 필요)</li>
+    <li><strong>피처 그래픽:</strong> 1024×500 PNG (앱 페이지 상단 배너)</li>
+    <li><strong>스크린샷:</strong> 폰 2~8장, 16:9 또는 9:16</li>
+    <li><strong>짧은 설명:</strong> 80자 — 예: "전국 공중화장실 중 비데 설치된 곳을 지도에서 한눈에"</li>
+    <li><strong>자세한 설명:</strong> 4000자 — 기능, 사용법, 데이터 출처(서울시 공공데이터)</li>
+    <li><strong>카테고리:</strong> 여행 및 지역정보 / 라이프스타일 중 택1</li>
+    <li><strong>내가 가능:</strong> 카피라이팅 초안, 카테고리 추천</li>
+    <li><strong>너만 가능:</strong> 스크린샷 촬영 (실기기 또는 에뮬레이터)</li>
+  </ul>
+</div>
+
+<div class="step">
+  <h2><span class="step-num">9</span>Play Console 설문 3종<span class="chip chip-you">YOU</span></h2>
+  <div class="why">데이터 안전 + 콘텐츠 등급 + 타겟 사용자. 모두 답변해야 출시 가능.</div>
+  <ul>
+    <li><strong>데이터 안전 섹션:</strong> 이메일/이름/사진/위치/사용자 콘텐츠/Analytics 수집 신고 — 내가 답변 초안 만들어줄 수 있음</li>
+    <li><strong>콘텐츠 등급 (IARC):</strong> 폭력/성/도박 등 설문. 비데앱은 전체이용가 예상</li>
+    <li><strong>타겟 사용자:</strong> 만 13세 이상 일반, 어린이 대상 아님</li>
+  </ul>
+</div>
+
+<div class="section-title">출시 직전 체크</div>
+
+<div class="step">
+  <h2><span class="step-num">★</span>최종 점검<span class="chip chip-both">BOTH</span></h2>
+  <ul>
+    <li>비공개 테스트 트랙에 AAB 업로드 → 테스터 12명 이상 14일간 사용 (개인 계정 신규 정책)</li>
+    <li>처리방침 URL이 Play Console 입력란에 정확히 들어가 있는지</li>
+    <li><code>versionCode</code> 1, <code>versionName</code> 0.1.0 그대로 출시할지 결정</li>
+    <li>크래시 0건 / ANR 0건 확인 (Firebase Crashlytics 또는 Play Console Vitals)</li>
+    <li>프로덕션 트랙으로 단계적 출시 (1% → 10% → 100%)</li>
+  </ul>
+</div>
+
+<div class="section-title">다음 액션</div>
+
+<div class="step">
+  <h2>지금 너가 할 일</h2>
+  <ol>
+    <li><code>docs/PRIVACY.md</code> 상단 운영자 정보 채우기</li>
+    <li>PowerShell에서 <code>.\scripts\create_keystore.ps1</code> 실행 → 비번 정하고 백업</li>
+    <li>Google Play 개발자 계정 만들지 결정 ($25)</li>
+    <li>Firebase 콘솔 로그인해서 프로젝트 생성</li>
+  </ol>
+  <p>위 1~4 끝나면 알려줘. 나머지는 내가 다 자동으로 처리할게 (SHA-1 추출, base64 키해시 변환, AAB 빌드, 데이터 안전 답변 초안, 스토어 카피라이팅 등).</p>
+</div>
+
+</body>
+</html>

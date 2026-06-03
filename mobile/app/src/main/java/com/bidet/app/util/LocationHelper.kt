@@ -13,6 +13,9 @@ object LocationHelper {
 
     val SEOUL_CITY_HALL = LatLng(37.5665, 126.9780)
 
+    /** 데모 데이터 중심 (고려대 안암 캠퍼스). DEMO_MODE 초기 center 로 사용. */
+    val KOREA_UNIV_ANAM = LatLng(37.5894, 127.0327)
+
     fun hasPermission(context: Context): Boolean {
         val fine = ContextCompat.checkSelfPermission(
             context, Manifest.permission.ACCESS_FINE_LOCATION

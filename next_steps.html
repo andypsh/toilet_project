@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>비데앱 — 지금 받아야 할 키/파일 4개</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    background: #0f172a; color: #e2e8f0; padding: 24px; line-height: 1.6;
+  }
+  .container { max-width: 980px; margin: 0 auto; }
+  h1 {
+    font-size: 26px; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .subtitle { color: #94a3b8; margin-bottom: 28px; font-size: 14px; }
+
+  .pill {
+    display: inline-block; background: #1e293b; color: #cbd5e1;
+    padding: 4px 12px; border-radius: 999px; font-size: 12px;
+    font-weight: 600;
+  }
+  .pill-red { background: #7f1d1d; color: #fecaca; }
+  .pill-green { background: #064e3b; color: #6ee7b7; }
+  .pill-yellow { background: #422006; color: #fbbf24; }
+
+  /* Progress */
+  .progress-wrap {
+    background: #1e293b; padding: 16px 20px; border-radius: 12px;
+    margin-bottom: 24px; display: flex; justify-content: space-between;
+    align-items: center; gap: 16px;
+  }
+  .progress-text { font-weight: 600; }
+  .progress-bar {
+    flex: 1; height: 10px; background: #334155; border-radius: 6px;
+    overflow: hidden; max-width: 280px;
+  }
+  .progress-fill {
+    height: 100%; background: linear-gradient(90deg, #3b82f6, #10b981);
+    transition: width 0.4s; width: 0%;
+  }
+
+  /* Key cards */
+  .key-card {
+    background: #1e293b; border-radius: 14px; padding: 22px;
+    margin-bottom: 16px; border-left: 4px solid #475569;
+    transition: opacity 0.2s, border-color 0.2s;
+  }
+  .key-card.done {
+    border-left-color: #10b981; opacity: 0.6;
+  }
+  .key-card.done .check-toggle::after { content: "✓"; }
+  .key-card.done .header h2 { text-decoration: line-through; }
+
+  .key-card .header {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px; margin-bottom: 14px;
+  }
+  .key-card .head-left {
+    display: flex; align-items: center; gap: 14px;
+  }
+  .key-number {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: #334155; color: #cbd5e1;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 17px; flex-shrink: 0;
+  }
+  .key-card.done .key-number { background: #10b981; color: white; }
+
+  h2 { font-size: 18px; }
+  .key-meta { color: #94a3b8; font-size: 13px; margin-top: 2px; }
+
+  .check-toggle {
+    width: 32px; height: 32px; border: 2px solid #475569;
+    border-radius: 50%; cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+    color: white; font-size: 18px; font-weight: 700;
+    user-select: none; flex-shrink: 0;
+    background: transparent;
+  }
+  .check-toggle:hover { border-color: #94a3b8; }
+  .key-card.done .check-toggle {
+    background: #10b981; border-color: #10b981;
+  }
+
+  .steps {
+    background: #0f172a; border-radius: 10px; padding: 14px 18px;
+    margin: 10px 0; font-size: 14px;
+  }
+  .steps strong { color: #fbbf24; }
+  .steps ol { padding-left: 22px; }
+  .steps li { padding: 3px 0; color: #cbd5e1; }
+  .steps a { color: #60a5fa; }
+
+  .copy-box {
+    background: #0f172a; border-radius: 8px; padding: 10px 12px;
+    font-family: "JetBrains Mono", Consolas, monospace;
+    font-size: 13px; color: #fbbf24; margin: 8px 0;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px; cursor: pointer; user-select: all;
+  }
+  .copy-box:hover { background: #020617; }
+  .copy-box .label { color: #94a3b8; font-size: 11px; user-select: none; }
+
+  .effect {
+    background: #1e3a8a; color: #bfdbfe; padding: 12px 16px;
+    border-radius: 8px; margin-top: 12px; font-size: 14px;
+    border-left: 3px solid #3b82f6;
+  }
+  .effect-title { font-weight: 700; color: #93c5fd; margin-bottom: 4px; }
+
+  pre {
+    background: #0f172a; padding: 12px; border-radius: 8px;
+    overflow-x: auto; margin: 8px 0; font-size: 12px;
+    color: #e2e8f0;
+  }
+  code { color: #fbbf24; font-family: "JetBrains Mono", Consolas, monospace; }
+
+  .data-status {
+    background: #1e293b; border-radius: 12px; padding: 18px 20px;
+    margin-top: 32px; margin-bottom: 16px;
+  }
+  .data-status h3 { font-size: 15px; margin-bottom: 12px; color: #94a3b8;
+                    text-transform: uppercase; letter-spacing: 0.5px; }
+  .status-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+  }
+  .status-cell {
+    background: #0f172a; padding: 14px; border-radius: 8px; text-align: center;
+  }
+  .status-cell .num { font-size: 22px; font-weight: 700; color: #60a5fa; }
+  .status-cell .lbl { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+
+  .footer {
+    margin-top: 40px; padding-top: 20px; border-top: 1px solid #334155;
+    color: #64748b; font-size: 12px; text-align: center;
+  }
+  .footer a { color: #60a5fa; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>🚽 비데앱 — 받아야 할 키/파일 4개</h1>
+  <p class="subtitle">전부 받으면 폰에 진짜 데이터(서울 화장실) 뜨는 상태까지 자동으로 갑니다 · 클릭으로 진행상황 체크</p>
+
+  <div class="progress-wrap">
+    <span class="progress-text">진행: <span id="doneCount">0</span> / 4</span>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <span class="pill" id="overallPill">대기 중</span>
+  </div>
+
+  <!-- KEY 1: 카카오 REST API -->
+  <div class="key-card" data-key="kakao">
+    <div class="header">
+      <div class="head-left">
+        <div class="key-number">1</div>
+        <div>
+          <h2>카카오 REST API 키</h2>
+          <div class="key-meta">좌표 변환용 · 무료 · 1~5분</div>
+        </div>
+      </div>
+      <div class="check-toggle" onclick="toggleDone(this)"></div>
+    </div>
+
+    <div class="steps">
+      <strong>받는 방법</strong>
+      <ol>
+        <li><a href="https://developers.kakao.com/console/app" target="_blank">developers.kakao.com/console/app</a> 접속 (카카오 로그인)</li>
+        <li>"내 애플리케이션" → <strong>이미 만들어둔 비데앱 클릭</strong> (Android 키 발급할 때 만든 그 앱) — 없으면 "애플리케이션 추가"</li>
+        <li>왼쪽 메뉴 <strong>"앱 설정 → 앱 키"</strong></li>
+        <li><strong>REST API 키</strong> 행에 있는 32자 문자열 복사</li>
+      </ol>
+      <strong>채팅에 붙여넣을 때 형식</strong>
+      <pre>KAKAO_REST_API_KEY: 여기에_32자_hex</pre>
+    </div>
+
+    <div class="effect">
+      <div class="effect-title">✨ 이거 받으면 즉시 효과</div>
+      좌표 없는 휴게소/지방 데이터에 좌표 채워줌. JSON이 6건 → 10건+ 로 늘어남.
+      <pre>python pipeline.py geocode
+python firestore_adapter.py</pre>
+    </div>
+  </div>
+
+  <!-- KEY 2: Claude API -->
+  <div class="key-card" data-key="claude">
+    <div class="header">
+      <div class="head-left">
+        <div class="key-number">2</div>
+        <div>
+          <h2>Claude API 키 (Anthropic)</h2>
+          <div class="key-meta">LLM 추출 · 신규 가입 $5 무료 크레딧 · 우리 작업 약 $0.10 · 5~10분</div>
+        </div>
+      </div>
+      <div class="check-toggle" onclick="toggleDone(this)"></div>
+    </div>
+
+    <div class="steps">
+      <strong>받는 방법</strong>
+      <ol>
+        <li><a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> 접속 (없으면 가입, Google 로그인 가능)</li>
+        <li>가입 직후 자동 <strong>$5 크레딧</strong> 지급됨 (충분히 남음)</li>
+        <li>좌측 <strong>API Keys</strong> 메뉴 → <strong>Create Key</strong></li>
+        <li>이름은 아무거나 (예: "bidet-app") → Create</li>
+        <li>한 번만 보여주는 키 복사 (sk-ant-api03-... 로 시작)</li>
+      </ol>
+      <strong>채팅에 붙여넣을 때 형식</strong>
+      <pre>ANTHROPIC_API_KEY: sk-ant-api03-...</pre>
+    </div>
+
+    <div class="effect">
+      <div class="effect-title">🚀 이거 받으면 데이터 양 폭발</div>
+      현재 룰베이스가 못 잡은 779건 raw_documents 를 Claude Haiku 로 다시 처리 → 양질 데이터 <strong>50~200건</strong> 추출 예상.
+      <pre># 노이즈 정리 후 LLM 재추출
+python _cleanup_naver.py
+python pipeline.py extract     # 이때부터 LLM 모드
+python firestore_adapter.py    # JSON 갱신</pre>
+    </div>
+  </div>
+
+  <!-- KEY 3: google-services.json -->
+  <div class="key-card" data-key="googleservices">
+    <div class="header">
+      <div class="head-left">
+        <div class="key-number">3</div>
+        <div>
+          <h2>google-services.json (Firebase)</h2>
+          <div class="key-meta">안드 앱이 Firebase 연결 · 무료 · 10~15분</div>
+        </div>
+      </div>
+      <div class="check-toggle" onclick="toggleDone(this)"></div>
+    </div>
+
+    <div class="steps">
+      <strong>받는 방법</strong>
+      <ol>
+        <li><a href="https://console.firebase.google.com" target="_blank">console.firebase.google.com</a> → <strong>프로젝트 추가</strong></li>
+        <li>프로젝트 이름: <code>bidet-app</code> → 만들기 (Google Analytics 켜도 끄도 상관 X)</li>
+        <li>대시보드에서 <strong>Android 아이콘 🤖</strong> 클릭해서 앱 추가
+          <ul>
+            <li>패키지명: <code>com.bidet.app</code></li>
+            <li>닉네임: 비데앱</li>
+            <li>SHA-1: 아래 줄 복사해서 붙여넣기 ↓</li>
+          </ul>
+        </li>
+        <li>"앱 등록" 클릭 → 다음 단계에서 <strong>google-services.json 다운로드</strong></li>
+        <li>좌측 메뉴 <strong>Build → Firestore Database</strong> → 시작 → <strong>테스트 모드</strong> → 위치: <strong>asia-northeast3 (서울)</strong></li>
+      </ol>
+      <strong>안드 앱 SHA-1 (Firebase 등록 시 입력)</strong>
+      <div class="copy-box" onclick="copyText(this)" title="클릭하면 전체 선택">
+        <span>F1:7A:31:13:92:8B:E2:B8:1D:57:2A:88:86:75:15:CF:7C:20:72:A4</span>
+        <span class="label">클릭→전체선택</span>
+      </div>
+      <strong>채팅에 어떻게 전달?</strong>
+      <ol style="padding-left:22px;">
+        <li>다운받은 <code>google-services.json</code> 을 <strong>채팅 창에 드래그&드롭</strong> (간편) 또는</li>
+        <li>직접 <code>mobile/app/google-services.json</code> 경로에 저장하고 채팅에 "배치 완료" 라고 알려주기</li>
+      </ol>
+    </div>
+
+    <div class="effect">
+      <div class="effect-title">🎯 이거 받으면 — 데모 모드 OFF</div>
+      <code>mobile/app/build.gradle.kts</code> 가 자동 감지해서 <code>BuildConfig.DEMO_MODE = false</code> 로 빌드. 진짜 Firestore 에서 데이터 받음.
+    </div>
+  </div>
+
+  <!-- KEY 4: service-account.json -->
+  <div class="key-card" data-key="serviceaccount">
+    <div class="header">
+      <div class="head-left">
+        <div class="key-number">4</div>
+        <div>
+          <h2>service-account.json (Firebase Admin)</h2>
+          <div class="key-meta">Python에서 Firestore 적재 · 1~2분</div>
+        </div>
+      </div>
+      <div class="check-toggle" onclick="toggleDone(this)"></div>
+    </div>
+
+    <div class="steps">
+      <strong>받는 방법 (Firebase 프로젝트 생성 후)</strong>
+      <ol>
+        <li>Firebase Console → <strong>프로젝트 설정</strong> (좌측 상단 톱니바퀴)</li>
+        <li><strong>서비스 계정</strong> 탭</li>
+        <li>"새 비공개 키 생성" 클릭 → JSON 다운로드 (주의: 비밀 키이므로 절대 외부 공유 X, git 에도 안 올라감)</li>
+      </ol>
+      <strong>채팅에 어떻게 전달?</strong>
+      <ol style="padding-left:22px;">
+        <li>다운받은 <code>service-account.json</code> 을 <strong>채팅 창에 드래그&드롭</strong></li>
+        <li>또는 <code>backend/service-account.json</code> 경로에 저장하고 "배치 완료" 알려주기</li>
+      </ol>
+    </div>
+
+    <div class="effect">
+      <div class="effect-title">🏁 마지막 단계 — 폰에서 진짜 데이터</div>
+      <pre>python firestore_upload.py            # 6+건 Firestore 적재
+cd mobile && .\gradlew installDebug   # 폰에 새 빌드 (Firebase 모드)
+# 폰에서 앱 실행 → 진짜 마커 6+개 표시</pre>
+    </div>
+  </div>
+
+  <!-- DATA STATUS -->
+  <div class="data-status">
+    <h3>📊 현재 데이터 현황</h3>
+    <div class="status-grid">
+      <div class="status-cell"><div class="num">779</div><div class="lbl">raw_documents</div></div>
+      <div class="status-cell"><div class="num">14</div><div class="lbl">locations</div></div>
+      <div class="status-cell"><div class="num">3</div><div class="lbl">좌표 있음</div></div>
+      <div class="status-cell"><div class="num">6</div><div class="lbl">Firestore 적재 대기</div></div>
+    </div>
+  </div>
+
+  <!-- ORDER -->
+  <div class="data-status">
+    <h3>🎯 추천 순서</h3>
+    <p style="font-size: 14px; color: #cbd5e1;">
+      <strong style="color:#fbbf24;">1 (카카오) → 2 (Claude) → 3 (google-services.json) → 4 (service-account.json)</strong>
+      순서로 받으세요. 받는 대로 채팅에 하나씩 붙여주시면 즉시 진행해서 데이터 양 단계적으로 늘리고, 마지막 4번 받으면 폰에 진짜 데이터 뜹니다.
+    </p>
+  </div>
+
+  <div class="footer">
+    이 파일은 단계 진행상황을 로컬에 저장합니다 · 마지막 업데이트: <span id="lastUpdate"></span><br>
+    <a href="progress.html">← 전체 진행 대시보드로 돌아가기</a> · <a href="README.md">README</a> · <a href="BRANCHING.md">브랜치 가이드</a>
+  </div>
+</div>
+
+<script>
+  const STORAGE = 'bidet_next_steps_v1';
+  function loadState() {
+    try { return JSON.parse(localStorage.getItem(STORAGE) || '{}'); }
+    catch { return {}; }
+  }
+  function saveState(state) {
+    localStorage.setItem(STORAGE, JSON.stringify(state));
+  }
+  function applyState() {
+    const state = loadState();
+    let done = 0;
+    document.querySelectorAll('.key-card').forEach(card => {
+      const k = card.dataset.key;
+      if (state[k]) {
+        card.classList.add('done');
+        done++;
+      } else {
+        card.classList.remove('done');
+      }
+    });
+    document.getElementById('doneCount').textContent = done;
+    const pct = (done / 4) * 100;
+    document.getElementById('progressFill').style.width = pct + '%';
+    const pill = document.getElementById('overallPill');
+    pill.textContent = done === 0 ? '대기 중'
+                     : done === 4 ? '준비 끝 — 채팅에 전달' : `${done}/4 완료`;
+    pill.className = 'pill ' + (done === 4 ? 'pill-green' : done > 0 ? 'pill-yellow' : 'pill-red');
+  }
+  function toggleDone(el) {
+    const card = el.closest('.key-card');
+    const k = card.dataset.key;
+    const state = loadState();
+    state[k] = !state[k];
+    saveState(state);
+    applyState();
+  }
+  function copyText(el) {
+    const span = el.querySelector('span');
+    navigator.clipboard.writeText(span.textContent.trim()).then(() => {
+      const lbl = el.querySelector('.label');
+      const orig = lbl.textContent;
+      lbl.textContent = '복사됨!';
+      setTimeout(() => lbl.textContent = orig, 1500);
+    });
+  }
+  applyState();
+  document.getElementById('lastUpdate').textContent = new Date().toLocaleString('ko-KR');
+</script>
+</body>
+</html>

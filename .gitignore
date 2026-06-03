@@ -3,6 +3,7 @@
 .gradle/
 .kotlin/
 /.idea/
+mobile/.idea/
 .DS_Store
 **/build/
 /captures

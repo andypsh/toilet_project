@@ -3,6 +3,7 @@ package com.bidet.app.ui.screens.map
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bidet.app.BuildConfig
 import com.bidet.app.data.model.Toilet
 import com.bidet.app.domain.usecase.GetNearbyToiletsUseCase
 import com.bidet.app.util.LatLng
@@ -18,7 +19,10 @@ import javax.inject.Inject
 data class MapUiState(
     val loading: Boolean = false,
     val toilets: List<Toilet> = emptyList(),
-    val center: LatLng = LocationHelper.SEOUL_CITY_HALL,
+    // DEMO_MODE 일 때는 데모 데이터(고대 안암) 중심, 운영 모드는 서울시청
+    val center: LatLng =
+        if (BuildConfig.DEMO_MODE) LocationHelper.KOREA_UNIV_ANAM
+        else LocationHelper.SEOUL_CITY_HALL,
     val cameraTrigger: Long = 0L,
     val error: String? = null,
 )

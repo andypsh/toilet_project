@@ -23,11 +23,11 @@
         "type": "NEWS",
         "url": "https://mdtoday.co.kr/news/view",
         "description": "장애인용 화장실에 비데가 시범 설치된 지하철역은 1·2호선 시청역",
-        "collectedAt": 1780474782276
+        "collectedAt": 1780477097402
       }
     ],
-    "createdAt": 1780474782276,
-    "updatedAt": 1780474782276
+    "createdAt": 1780477097402,
+    "updatedAt": 1780477097402
   },
   {
     "id": "loc_0011",
@@ -53,11 +53,11 @@
         "type": "NEWS",
         "url": "https://mdtoday.co.kr/news/view",
         "description": "장애인용 화장실에 비데가 시범 설치된 지하철역은 ... 3호선 종로3가역",
-        "collectedAt": 1780474782276
+        "collectedAt": 1780477097402
       }
     ],
-    "createdAt": 1780474782276,
-    "updatedAt": 1780474782276
+    "createdAt": 1780477097402,
+    "updatedAt": 1780477097402
   },
   {
     "id": "loc_0012",
@@ -83,110 +83,20 @@
         "type": "NEWS",
         "url": "https://mdtoday.co.kr/news/view",
         "description": "장애인용 화장실에 비데가 시범 설치된 지하철역은 ... 4호선 숙대입구역",
-        "collectedAt": 1780474782276
+        "collectedAt": 1780477097402
       }
     ],
-    "createdAt": 1780474782276,
-    "updatedAt": 1780474782276
+    "createdAt": 1780477097402,
+    "updatedAt": 1780477097402
   },
   {
-    "id": "loc_0008",
-    "name": "인천국제공항 제2터미널 마티나 골드 라운지 화장실",
-    "address": "인천광역시 중구 공항로 272",
-    "lat": 37.4691,
-    "lng": 126.4498,
-    "geohash": "wy9vjmjcm",
-    "category": "AIRPORT",
-    "hasBidet": true,
-    "bidetVerified": false,
-    "bidetCount": 0,
-    "gender": "UNKNOWN",
-    "accessible": false,
-    "openHours": null,
-    "is24h": false,
-    "isFree": true,
-    "rating": 0.0,
-    "reviewCount": 0,
-    "photoUrls": [],
-    "sources": [
-      {
-        "type": "BLOG_REVIEW",
-        "url": "https://story-collector.tistory.com",
-        "description": "변기에 비데가 설치되어 있었고 깨끗하게 관리는 상태였습니다",
-        "collectedAt": 1780474782276
-      }
-    ],
-    "createdAt": 1780474782276,
-    "updatedAt": 1780474782276
-  },
-  {
-    "id": "loc_0009",
-    "name": "김해국제공항 국제선 대한항공 KAL 라운지 화장실",
-    "address": "부산광역시 강서구 공항진입로 108",
-    "lat": 35.1796,
-    "lng": 128.9385,
-    "geohash": "wy78nh60h",
-    "category": "AIRPORT",
-    "hasBidet": true,
-    "bidetVerified": false,
-    "bidetCount": 0,
-    "gender": "UNKNOWN",
-    "accessible": false,
-    "openHours": null,
-    "is24h": false,
-    "isFree": true,
-    "rating": 0.0,
-    "reviewCount": 0,
-    "photoUrls": [],
-    "sources": [
-      {
-        "type": "BLOG_REVIEW",
-        "url": "https://intothebluecrystal.tistory.com",
-        "description": "변기에는 비데가 설치되어 있고",
-        "collectedAt": 1780474782276
-      }
-    ],
-    "createdAt": 1780474782276,
-    "updatedAt": 1780474782276
-  },
-  {
-    "id": "loc_0013",
-    "name": "KTX 서울역 화장실 (1층/지하1층/지상3층 중 비데 있음)",
-    "address": "서울특별시 용산구 한강대로 405",
-    "lat": 37.556878,
-    "lng": 126.972578,
-    "geohash": "wydm9m48e",
-    "category": "TRAIN_STATION",
-    "hasBidet": true,
-    "bidetVerified": false,
-    "bidetCount": 0,
-    "gender": "UNKNOWN",
-    "accessible": false,
-    "openHours": null,
-    "is24h": false,
-    "isFree": true,
-    "rating": 0.0,
-    "reviewCount": 0,
-    "photoUrls": [],
-    "sources": [
-      {
-        "type": "BLOG_REVIEW",
-        "url": "https://www.a-ha.io",
-        "description": "서울역 내부의 대표적인 화장실은 1층과 지하 1층, 그리고 지상 3층에 위치... 이 중에서도 비데가",
-        "collectedAt": 1780474782276
-      }
-    ],
-    "createdAt": 1780474782276,
-    "updatedAt": 1780474782276
-  },
-  {
-    "id": "loc_0014",
-    "name": "롯데월드몰 에비뉴 화장실",
-    "address": "서울특별시 송파구 올림픽로 300",
+    "id": "loc_0596",
+    "name": "롯데월드타워",
+    "address": "",
     "lat": 37.5129211,
     "lng": 127.1027399,
     "geohash": "wydmkm12s",
-    "category": "SHOPPING_MALL",
+    "category": "UNKNOWN",
     "hasBidet": true,
     "bidetVerified": false,
     "bidetCount": 0,
@@ -201,12 +111,102 @@
     "sources": [
       {
         "type": "BLOG_REVIEW",
-        "url": "https://blog.naver.com/bokdengyee",
-        "description": "개개의 화장실마다 큰 거울과 비데설치되어 있고",
-        "collectedAt": 1780474782276
+        "url": "https://blog.naver.com/allios_/223865632179",
+        "description": ", 한강, 몽촌토성, 잠실종합운동장까지... 세면대, 비데가 갖춰져 있습니다. 서브룸 1 서브룸 1 욕실 서",
+        "collectedAt": 1780477097402
+      },
+      {
+        "type": "BLOG_REVIEW",
+        "url": "https://blog.naver.com/prayreader/224037565973",
+        "description": "어디일까요?... 모든 욕실에는 세면대, 샤워부스, 비데 일체형으로 구성돼 있어 고급 주거의 정석을 보여줍",
+        "collectedAt": 1780477097402
+      },
+      {
+        "type": "BLOG_REVIEW",
+        "url": "http://cafe.naver.com/hexenyang/24930",
+        "description": "층) 시그니엘 서울에 다녀... 욕실 입구에 화장대와 비데가 있는 화장실... 밤에 아이들과 좋은 시간을 보",
+        "collectedAt": 1780477097402
+      },
+      {
+        "type": "BLOG_REVIEW",
+        "url": "http://cafe.naver.com/loyaltylife/116802",
+        "description": "층) 시그니엘 서울에 다녀... 욕실 입구에 화장대와 비데가 있는 화장실... 밤에 아이들과 좋은 시간을 보",
+        "collectedAt": 1780477097402
+      },
+      {
+        "type": "BLOG_REVIEW",
+        "url": "http://cafe.naver.com/black4935u/4577",
+        "description": "실. 8호선 몽실토성역.9호선 한성백제역... 무상인 비데포함 샤워기의 물막이 배려 유리시공 ~ 강남 3구",
+        "collectedAt": 1780477097402
       }
     ],
-    "createdAt": 1780474782276,
-    "updatedAt": 1780474782276
+    "createdAt": 1780477097402,
+    "updatedAt": 1780477097402
+  },
+  {
+    "id": "loc_0602",
+    "name": "롯데월드호텔",
+    "address": "",
+    "lat": 37.5129211,
+    "lng": 127.1027399,
+    "geohash": "wydmkm12s",
+    "category": "UNKNOWN",
+    "hasBidet": true,
+    "bidetVerified": false,
+    "bidetCount": 0,
+    "gender": "UNKNOWN",
+    "accessible": false,
+    "openHours": null,
+    "is24h": false,
+    "isFree": true,
+    "rating": 0.0,
+    "reviewCount": 0,
+    "photoUrls": [],
+    "sources": [
+      {
+        "type": "BLOG_REVIEW",
+        "url": "https://blog.naver.com/tlsdl3545/224250013806",
+        "description": "2인) 롯데월드 티켓 (2매)... ㅜㅜ 넘 깔끔하고 비데 갖춰져있고.. 근데 비데 한글로 안써져잇드라; 여",
+        "collectedAt": 1780477097402
+      },
+      {
+        "type": "BLOG_REVIEW",
+        "url": "https://blog.naver.com/aldus4567/224218839741",
+        "description": "요 사랑스럽워연 입니다˛ε♡з¸ 롯데월드... 좋았고 비데와 미니세탁기도 있었는데 세탁기가 있다는거에 아주",
+        "collectedAt": 1780477097402
+      }
+    ],
+    "createdAt": 1780477097402,
+    "updatedAt": 1780477097402
+  },
+  {
+    "id": "loc_0109",
+    "name": "종로3가역",
+    "address": "",
+    "lat": 37.5715,
+    "lng": 126.989059,
+    "geohash": "wydm9xwtg",
+    "category": "UNKNOWN",
+    "hasBidet": true,
+    "bidetVerified": false,
+    "bidetCount": 0,
+    "gender": "UNKNOWN",
+    "accessible": false,
+    "openHours": null,
+    "is24h": false,
+    "isFree": true,
+    "rating": 0.0,
+    "reviewCount": 0,
+    "photoUrls": [],
+    "sources": [
+      {
+        "type": "BLOG_REVIEW",
+        "url": "http://cafe.naver.com/loyaltylife/319868",
+        "description": "대가 있구요 우측엔 샤워부스 좌측엔 변기방이 있습니다 비데 설치되어...",
+        "collectedAt": 1780477097402
+      }
+    ],
+    "createdAt": 1780477097402,
+    "updatedAt": 1780477097402
   }
 ]

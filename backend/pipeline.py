@@ -98,12 +98,13 @@ def cmd_geocode(args: argparse.Namespace) -> None:
 def cmd_export(args: argparse.Namespace) -> None:
     """앱이 바로 소비할 형태로 locations + 출처 목록을 한 JSON에 묶어 출력."""
     out_path = Path(args.out)
+    coord_filter = "AND latitude IS NOT NULL AND longitude IS NOT NULL" if getattr(args, "coords_only", False) else ""
     with connect() as conn:
-        locs = conn.execute("""
+        locs = conn.execute(f"""
             SELECT id, place_name, address, latitude, longitude,
                    place_type, has_bidet, confidence
             FROM locations
-            WHERE has_bidet = 1
+            WHERE has_bidet = 1 {coord_filter}
             ORDER BY confidence DESC, id
         """).fetchall()
         data = []
@@ -181,6 +182,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     sp = sub.add_parser("export")
     sp.add_argument("--out", default="locations.json")
+    sp.add_argument("--coords-only", action="store_true",
+                    help="좌표 있는 location만 export (앱 즉시 사용용)")
     sp.set_defaults(func=cmd_export)
 
     sp = sub.add_parser("run")

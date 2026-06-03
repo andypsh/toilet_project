@@ -1,0 +1,140 @@
+[
+  {
+    "id": 10,
+    "place_name": "1·2호선 시청역 장애인화장실",
+    "address": "서울특별시 중구 세종대로 지하 101",
+    "latitude": 37.56372688,
+    "longitude": 126.9754385,
+    "place_type": "지하철역/장애인화장실",
+    "has_bidet": 1,
+    "confidence": 80,
+    "sources": [
+      {
+        "source_type": "news",
+        "source_url": "https://mdtoday.co.kr/news/view",
+        "excerpt": "장애인용 화장실에 비데가 시범 설치된 지하철역은 1·2호선 시청역",
+        "confidence": 80
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "place_name": "3호선 종로3가역 장애인화장실",
+    "address": "서울특별시 종로구 종로 지하 129",
+    "latitude": 37.5715,
+    "longitude": 126.989059,
+    "place_type": "지하철역/장애인화장실",
+    "has_bidet": 1,
+    "confidence": 80,
+    "sources": [
+      {
+        "source_type": "news",
+        "source_url": "https://mdtoday.co.kr/news/view",
+        "excerpt": "장애인용 화장실에 비데가 시범 설치된 지하철역은 ... 3호선 종로3가역",
+        "confidence": 80
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "place_name": "4호선 숙대입구역 장애인화장실",
+    "address": "서울특별시 용산구 청파로 378",
+    "latitude": 37.5443,
+    "longitude": 126.9714,
+    "place_type": "지하철역/장애인화장실",
+    "has_bidet": 1,
+    "confidence": 80,
+    "sources": [
+      {
+        "source_type": "news",
+        "source_url": "https://mdtoday.co.kr/news/view",
+        "excerpt": "장애인용 화장실에 비데가 시범 설치된 지하철역은 ... 4호선 숙대입구역",
+        "confidence": 80
+      }
+    ]
+  },
+  {
+    "id": 596,
+    "place_name": "롯데월드타워",
+    "address": null,
+    "latitude": 37.5129211,
+    "longitude": 127.1027399,
+    "place_type": null,
+    "has_bidet": 1,
+    "confidence": 60,
+    "sources": [
+      {
+        "source_type": "naver_blog",
+        "source_url": "https://blog.naver.com/allios_/223865632179",
+        "excerpt": ", 한강, 몽촌토성, 잠실종합운동장까지... 세면대, 비데가 갖춰져 있습니다. 서브룸 1 서브룸 1 욕실 서",
+        "confidence": 60
+      },
+      {
+        "source_type": "naver_blog",
+        "source_url": "https://blog.naver.com/prayreader/224037565973",
+        "excerpt": "어디일까요?... 모든 욕실에는 세면대, 샤워부스, 비데 일체형으로 구성돼 있어 고급 주거의 정석을 보여줍",
+        "confidence": 60
+      },
+      {
+        "source_type": "naver_cafe",
+        "source_url": "http://cafe.naver.com/hexenyang/24930",
+        "excerpt": "층) 시그니엘 서울에 다녀... 욕실 입구에 화장대와 비데가 있는 화장실... 밤에 아이들과 좋은 시간을 보",
+        "confidence": 55
+      },
+      {
+        "source_type": "naver_cafe",
+        "source_url": "http://cafe.naver.com/loyaltylife/116802",
+        "excerpt": "층) 시그니엘 서울에 다녀... 욕실 입구에 화장대와 비데가 있는 화장실... 밤에 아이들과 좋은 시간을 보",
+        "confidence": 55
+      },
+      {
+        "source_type": "naver_cafe",
+        "source_url": "http://cafe.naver.com/black4935u/4577",
+        "excerpt": "실. 8호선 몽실토성역.9호선 한성백제역... 무상인 비데포함 샤워기의 물막이 배려 유리시공 ~ 강남 3구",
+        "confidence": 55
+      }
+    ]
+  },
+  {
+    "id": 602,
+    "place_name": "롯데월드호텔",
+    "address": null,
+    "latitude": 37.5129211,
+    "longitude": 127.1027399,
+    "place_type": null,
+    "has_bidet": 1,
+    "confidence": 60,
+    "sources": [
+      {
+        "source_type": "naver_blog",
+        "source_url": "https://blog.naver.com/tlsdl3545/224250013806",
+        "excerpt": "2인) 롯데월드 티켓 (2매)... ㅜㅜ 넘 깔끔하고 비데 갖춰져있고.. 근데 비데 한글로 안써져잇드라; 여",
+        "confidence": 60
+      },
+      {
+        "source_type": "naver_blog",
+        "source_url": "https://blog.naver.com/aldus4567/224218839741",
+        "excerpt": "요 사랑스럽워연 입니다˛ε♡з¸ 롯데월드... 좋았고 비데와 미니세탁기도 있었는데 세탁기가 있다는거에 아주",
+        "confidence": 60
+      }
+    ]
+  },
+  {
+    "id": 109,
+    "place_name": "종로3가역",
+    "address": null,
+    "latitude": 37.5715,
+    "longitude": 126.989059,
+    "place_type": null,
+    "has_bidet": 1,
+    "confidence": 55,
+    "sources": [
+      {
+        "source_type": "naver_cafe",
+        "source_url": "http://cafe.naver.com/loyaltylife/319868",
+        "excerpt": "대가 있구요 우측엔 샤워부스 좌측엔 변기방이 있습니다 비데 설치되어...",
+        "confidence": 55
+      }
+    ]
+  }
+]
