@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>서울 공중화장실 지도</title>
+  <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=cvsssp59a5"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Noto Sans KR', sans-serif; background: #f0f2f5; }
+
+    header {
+      background: #1a73e8;
+      color: white;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      z-index: 10;
+      position: relative;
+    }
+    header .icon { font-size: 28px; }
+    header h1 { font-size: 20px; font-weight: 700; }
+    header span { font-size: 13px; opacity: 0.85; margin-left: 8px; }
+
+    #container {
+      display: flex;
+      height: calc(100vh - 60px);
+    }
+
+    #sidebar {
+      width: 320px;
+      background: white;
+      overflow-y: auto;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #search-box {
+      padding: 12px;
+      border-bottom: 1px solid #e8e8e8;
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 1;
+    }
+    #search-box input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #d0d0d0;
+      border-radius: 20px;
+      font-size: 13px;
+      outline: none;
+    }
+    #search-box input:focus { border-color: #1a73e8; }
+
+    #count-label {
+      padding: 8px 14px;
+      font-size: 12px;
+      color: #888;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    #list { flex: 1; }
+
+    .item {
+      padding: 14px 16px;
+      border-bottom: 1px solid #f0f0f0;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .item:hover { background: #f5f8ff; }
+    .item.active { background: #e8f0fe; border-left: 3px solid #1a73e8; }
+
+    .item-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #222;
+      margin-bottom: 4px;
+    }
+    .item-addr {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+    .item-badges { display: flex; gap: 4px; flex-wrap: wrap; }
+    .badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: #e8f0fe;
+      color: #1a73e8;
+      font-weight: 500;
+    }
+    .badge.public { background: #e8f5e9; color: #2e7d32; }
+    .badge.open { background: #fff3e0; color: #e65100; }
+    .badge.cctv { background: #fce4ec; color: #c62828; }
+
+    #map { flex: 1; }
+
+    /* 인포윈도우 */
+    .info-wrap {
+      padding: 14px 16px;
+      min-width: 240px;
+      max-width: 300px;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+    .info-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #eee;
+    }
+    .info-row {
+      display: flex;
+      gap: 6px;
+      font-size: 12px;
+      margin-bottom: 5px;
+      line-height: 1.5;
+    }
+    .info-label {
+      color: #888;
+      white-space: nowrap;
+      min-width: 56px;
+    }
+    .info-val { color: #333; }
+    .info-badges { margin-top: 8px; display: flex; gap: 4px; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="icon">🚻</div>
+  <h1>서울 공중화장실 지도</h1>
+  <span>서울특별시 종로구</span>
+</header>
+
+<div id="container">
+  <div id="sidebar">
+    <div id="search-box">
+      <input type="text" id="search-input" placeholder="화장실명 또는 주소 검색...">
+    </div>
+    <div id="count-label"></div>
+    <div id="list"></div>
+  </div>
+  <div id="map"></div>
+</div>
+
+<script>
+const data = [
+  {
+    name: "누상동체육시설 공중화장실",
+    addr: "서울특별시 종로구 옥인6길 26-17",
+    type: "공중화장실",
+    manager: "종로구청 청소행정과",
+    phone: "221482383",
+    hours: "상시",
+    hoursDetail: "",
+    maleToilet: 1, maleUrinal: 1,
+    femaleToilet: 1,
+    cctv: "N",
+    babyChange: "N",
+    lat: 37.58011, lng: 126.96367
+  },
+  {
+    name: "종로문화체육센터",
+    addr: "서울특별시 종로구 인왕산로1길 21",
+    type: "개방화장실",
+    manager: "종로구시설관리공단 건강사업부",
+    phone: "27329393",
+    hours: "정시",
+    hoursDetail: "09:00~18:00",
+    maleToilet: 2, maleUrinal: 3,
+    femaleToilet: 7,
+    cctv: "N",
+    babyChange: "Y",
+    lat: 37.57428, lng: 126.96468
+  },
+  {
+    name: "통인시장 고객만족센터",
+    addr: "서울특별시 종로구 자하문로 15길 18",
+    type: "공중화장실",
+    manager: "통인시장 상인회",
+    phone: "27220911",
+    hours: "정시",
+    hoursDetail: "11:00~16:00",
+    maleToilet: 2, maleUrinal: 3,
+    femaleToilet: 4,
+    cctv: "N",
+    babyChange: "Y",
+    lat: 37.58077, lng: 126.96995
+  },
+  {
+    name: "보건소",
+    addr: "서울특별시 종로구 자하문로19길 36",
+    type: "개방화장실",
+    manager: "종로보건소",
+    phone: "221483520",
+    hours: "정시",
+    hoursDetail: "평일9시간(09:00~18:00)",
+    maleToilet: 7, maleUrinal: 7,
+    femaleToilet: 10,
+    cctv: "N",
+    babyChange: "N",
+    lat: 37.58177, lng: 126.96926
+  },
+  {
+    name: "광장시장(합동,화창빌딩)",
+    addr: "서울특별시 종로구 종로 194-7",
+    type: "개방화장실",
+    manager: "광장시장(합동,화창빌딩)",
+    phone: "",
+    hours: "정시",
+    hoursDetail: "07:00-18:00+일요일폐쇄",
+    maleToilet: 2, maleUrinal: 2,
+    femaleToilet: 2,
+    cctv: "N",
+    babyChange: "N",
+    lat: 37.57042, lng: 126.99938
+  },
+  {
+    name: "동대문역(4)",
+    addr: "서울특별시 종로구 종로6가 287-1 동대문역(4호선)",
+    type: "공중화장실",
+    manager: "서울교통공사",
+    phone: "261104211",
+    hours: "정시",
+    hoursDetail: "05~24",
+    maleToilet: 2, maleUrinal: 4,
+    femaleToilet: 4,
+    cctv: "Y",
+    babyChange: "N",
+    lat: 37.561159, lng: 126.994398
+  },
+  {
+    name: "안국역(3)",
+    addr: "서울특별시 종로구 안국동 155-2 3호선 안국역",
+    type: "공중화장실",
+    manager: "서울교통공사",
+    phone: "261103281",
+    hours: "정시",
+    hoursDetail: "05~24",
+    maleToilet: 4, maleUrinal: 4,
+    femaleToilet: 4,
+    cctv: "Y",
+    babyChange: "Y",
+    lat: 37.566412, lng: 126.994185
+  },
+  {
+    name: "동묘앞역(1)",
+    addr: "서울특별시 종로구 숭인동 117 동묘앞역(1호선)",
+    type: "공중화장실",
+    manager: "서울교통공사",
+    phone: "261101271",
+    hours: "정시",
+    hoursDetail: "05~24",
+    maleToilet: 1, maleUrinal: 2,
+    femaleToilet: 1,
+    cctv: "Y",
+    babyChange: "Y",
+    lat: 37.573281, lng: 127.016649
+  },
+  {
+    name: "버거킹(종로점)",
+    addr: "서울특별시 종로구 종로 94",
+    type: "개방화장실",
+    manager: "버거킹(종로점)",
+    phone: "",
+    hours: "정시",
+    hoursDetail: "09:00-24:00",
+    maleToilet: 1, maleUrinal: 1,
+    femaleToilet: 4,
+    cctv: "N",
+    babyChange: "N",
+    lat: 37.56994, lng: 126.98811
+  },
+  {
+    name: "인왕산 청운지구(2)(청운공원 화장실)",
+    addr: "서울특별시 종로구 청운동 7-3",
+    type: "공중화장실",
+    manager: "종로구청 도시녹지과",
+    phone: "221482832",
+    hours: "상시",
+    hoursDetail: "",
+    maleToilet: 2, maleUrinal: 3,
+    femaleToilet: 5,
+    cctv: "Y",
+    babyChange: "N",
+    lat: 37.59103, lng: 126.96627
+  },
+  {
+    name: "허리우드극장(낙원상가4층)",
+    addr: "서울특별시 종로구 삼일대로 428",
+    type: "개방화장실",
+    manager: "허리우드극장(낙원상가4층)",
+    phone: "",
+    hours: "정시",
+    hoursDetail: "09:30-17:00",
+    maleToilet: 3, maleUrinal: 5,
+    femaleToilet: 9,
+    cctv: "N",
+    babyChange: "N",
+    lat: 37.57258, lng: 126.98781
+  },
+  {
+    name: "종묘공영주차장(주차시설운영처)",
+    addr: "서울특별시 종로구 훈정동 2",
+    type: "개방화장실",
+    manager: "서울시설공단 주차시설운영처",
+    phone: "222906114",
+    hours: "정시",
+    hoursDetail: "00~24",
+    maleToilet: 3, maleUrinal: 6,
+    femaleToilet: 3,
+    cctv: "Y",
+    babyChange: "N",
+    lat: 37.5715, lng: 126.99505
+  },
+  {
+    name: "동대문지하상가 화장실",
+    addr: "서울특별시 종로구 율곡로 지하 308",
+    type: "개방화장실",
+    manager: "서울시시설관리공단",
+    phone: "222906545",
+    hours: "정시",
+    hoursDetail: "06:00~24:00",
+    maleToilet: 3, maleUrinal: 5,
+    femaleToilet: 8,
+    cctv: "Y",
+    babyChange: "N",
+    lat: 37.57616, lng: 126.99479
+  }
+];
+
+// 지도 초기화
+const map = new naver.maps.Map('map', {
+  center: new naver.maps.LatLng(37.575, 126.985),
+  zoom: 14,
+  mapTypeControl: true
+});
+
+let infoWindow = null;
+let markers = [];
+let activeItem = null;
+
+// 마커 아이콘 SVG 생성
+function makeIcon(type, active) {
+  const color = type === '공중화장실' ? (active ? '#0d47a1' : '#1a73e8')
+                                      : (active ? '#b71c1c' : '#e53935');
+  const size = active ? 36 : 30;
+  return {
+    content: `<div style="
+      width:${size}px;height:${size}px;
+      background:${color};
+      border-radius:50% 50% 50% 0;
+      transform:rotate(-45deg);
+      border:2px solid white;
+      box-shadow:0 2px 6px rgba(0,0,0,0.35);
+      display:flex;align-items:center;justify-content:center;
+    "><span style="transform:rotate(45deg);font-size:${active?16:13}px;">🚻</span></div>`,
+    size: new naver.maps.Size(size, size),
+    anchor: new naver.maps.Point(size / 2, size)
+  };
+}
+
+function buildInfoContent(d) {
+  const badges = [];
+  if (d.type === '공중화장실') badges.push(`<span style="background:#e8f0fe;color:#1565c0;padding:2px 8px;border-radius:10px;font-size:11px;">공중화장실</span>`);
+  else badges.push(`<span style="background:#fce4ec;color:#c62828;padding:2px 8px;border-radius:10px;font-size:11px;">개방화장실</span>`);
+  if (d.cctv === 'Y') badges.push(`<span style="background:#fce4ec;color:#b71c1c;padding:2px 8px;border-radius:10px;font-size:11px;">📷 CCTV</span>`);
+  if (d.babyChange === 'Y') badges.push(`<span style="background:#e8f5e9;color:#2e7d32;padding:2px 8px;border-radius:10px;font-size:11px;">👶 기저귀교환대</span>`);
+
+  return `<div class="info-wrap">
+    <div class="info-title">🚻 ${d.name}</div>
+    <div class="info-row"><span class="info-label">📍 주소</span><span class="info-val">${d.addr}</span></div>
+    <div class="info-row"><span class="info-label">🕐 운영</span><span class="info-val">${d.hours}${d.hoursDetail ? ' · ' + d.hoursDetail : ''}</span></div>
+    <div class="info-row"><span class="info-label">🏢 관리</span><span class="info-val">${d.manager}</span></div>
+    ${d.phone ? `<div class="info-row"><span class="info-label">📞 전화</span><span class="info-val">${d.phone}</span></div>` : ''}
+    <div class="info-row"><span class="info-label">🚹 남성</span><span class="info-val">대변기 ${d.maleToilet}개 · 소변기 ${d.maleUrinal}개</span></div>
+    <div class="info-row"><span class="info-label">🚺 여성</span><span class="info-val">대변기 ${d.femaleToilet}개</span></div>
+    <div class="info-badges">${badges.join('')}</div>
+  </div>`;
+}
+
+function openInfo(marker, d, index) {
+  if (infoWindow) infoWindow.close();
+  if (activeItem !== null) {
+    document.querySelectorAll('.item')[activeItem]?.classList.remove('active');
+    markers[activeItem].setIcon(makeIcon(data[activeItem].type, false));
+  }
+  activeItem = index;
+  marker.setIcon(makeIcon(d.type, true));
+
+  infoWindow = new naver.maps.InfoWindow({
+    content: buildInfoContent(d),
+    borderWidth: 0,
+    disableAnchor: false,
+    backgroundColor: 'white',
+    borderColor: 'transparent',
+    pixelOffset: new naver.maps.Point(0, -10)
+  });
+  infoWindow.open(map, marker);
+  map.panTo(new naver.maps.LatLng(d.lat, d.lng));
+
+  // 사이드바 활성화
+  const items = document.querySelectorAll('.item');
+  items.forEach(el => el.classList.remove('active'));
+  items[index]?.classList.add('active');
+  items[index]?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// 마커 생성
+data.forEach((d, i) => {
+  const marker = new naver.maps.Marker({
+    position: new naver.maps.LatLng(d.lat, d.lng),
+    map,
+    icon: makeIcon(d.type, false),
+    title: d.name
+  });
+  markers.push(marker);
+
+  naver.maps.Event.addListener(marker, 'click', () => openInfo(marker, d, i));
+});
+
+// 사이드바 목록 렌더링
+function renderList(filtered) {
+  const list = document.getElementById('list');
+  const countLabel = document.getElementById('count-label');
+  countLabel.textContent = `총 ${filtered.length}개 화장실`;
+  list.innerHTML = '';
+
+  filtered.forEach(({ d, i }) => {
+    const el = document.createElement('div');
+    el.className = 'item';
+    const badges = [];
+    if (d.type === '공중화장실') badges.push(`<span class="badge public">공중</span>`);
+    else badges.push(`<span class="badge open">개방</span>`);
+    if (d.hours === '상시') badges.push(`<span class="badge">24시간</span>`);
+    if (d.cctv === 'Y') badges.push(`<span class="badge cctv">CCTV</span>`);
+    if (d.babyChange === 'Y') badges.push(`<span class="badge">기저귀교환대</span>`);
+
+    el.innerHTML = `
+      <div class="item-title">${d.name}</div>
+      <div class="item-addr">${d.addr}</div>
+      <div class="item-badges">${badges.join('')}</div>
+    `;
+    el.addEventListener('click', () => openInfo(markers[i], d, i));
+    list.appendChild(el);
+  });
+}
+
+const allItems = data.map((d, i) => ({ d, i }));
+renderList(allItems);
+
+// 검색
+document.getElementById('search-input').addEventListener('input', e => {
+  const q = e.target.value.trim().toLowerCase();
+  const filtered = allItems.filter(({ d }) =>
+    d.name.toLowerCase().includes(q) || d.addr.toLowerCase().includes(q)
+  );
+  // 마커 가시성
+  data.forEach((_, i) => {
+    const show = filtered.some(f => f.i === i);
+    markers[i].setMap(show ? map : null);
+  });
+  renderList(filtered);
+  if (infoWindow) { infoWindow.close(); activeItem = null; }
+});
+
+// 지도 클릭시 인포윈도우 닫기
+naver.maps.Event.addListener(map, 'click', () => {
+  if (infoWindow) infoWindow.close();
+  if (activeItem !== null) {
+    markers[activeItem].setIcon(makeIcon(data[activeItem].type, false));
+    document.querySelectorAll('.item')[activeItem]?.classList.remove('active');
+    activeItem = null;
+  }
+});
+</script>
+</body>
+</html>
