@@ -1,0 +1,59 @@
+# ===== Android / Kotlin =====
+*.iml
+.gradle/
+.kotlin/
+/local.properties
+/.idea/
+.DS_Store
+**/build/
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# ===== Firebase / 비밀 키 =====
+google-services.json
+firebase-service-account.json
+firebase/functions/node_modules/
+
+# ===== Kakao =====
+kakao_native_app_key
+
+# ===== 릴리즈 서명 — 절대 커밋 금지 =====
+keystore.properties
+keystore/
+*.jks
+*.keystore
+
+# ===== Python (데이터 수집 파이프라인) =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+
+# ===== 환경 변수 / 비밀 =====
+.env
+.env.local
+*.secret
+
+# ===== 데이터 파일 (재생성 가능) =====
+bidet.db
+*.sqlite
+*.sqlite3
+
+# ===== IDE =====
+.vscode/
+*.swp
+*.swo
+
+# ===== Claude 로컬 설정 =====
+.claude/settings.local.json
+
+# ===== OS =====
+Thumbs.db
+ehthumbs.db

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>비데앱 진행 대시보드</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    background: #0f172a; color: #e2e8f0; padding: 32px; line-height: 1.6;
+  }
+  .container { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 28px; margin-bottom: 8px; }
+  .subtitle { color: #94a3b8; margin-bottom: 32px; }
+  .progress-bar {
+    width: 100%; height: 12px; background: #1e293b; border-radius: 6px;
+    overflow: hidden; margin-bottom: 8px;
+  }
+  .progress-fill {
+    height: 100%; background: linear-gradient(90deg, #3b82f6, #10b981);
+    transition: width 0.4s; border-radius: 6px;
+  }
+  .progress-text { color: #94a3b8; font-size: 14px; margin-bottom: 32px; }
+
+  .step {
+    background: #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 16px;
+    border-left: 4px solid #475569; transition: all 0.2s;
+  }
+  .step.done { border-left-color: #10b981; }
+  .step.in-progress { border-left-color: #f59e0b; }
+  .step.user-action { border-left-color: #ef4444; }
+  .step.blocked { border-left-color: #6b7280; opacity: 0.7; }
+
+  .step-header {
+    display: flex; justify-content: space-between; align-items: center;
+    cursor: pointer; gap: 12px;
+  }
+  .step-title { font-size: 17px; font-weight: 600; flex: 1; }
+  .step-number {
+    background: #334155; color: #cbd5e1; width: 32px; height: 32px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px; flex-shrink: 0;
+  }
+  .step.done .step-number { background: #10b981; color: white; }
+  .step.in-progress .step-number { background: #f59e0b; color: white; }
+  .step.user-action .step-number { background: #ef4444; color: white; }
+
+  .badge {
+    font-size: 11px; padding: 4px 10px; border-radius: 12px;
+    background: #334155; color: #cbd5e1; font-weight: 600;
+    white-space: nowrap; text-transform: uppercase;
+  }
+  .badge.done { background: #064e3b; color: #6ee7b7; }
+  .badge.user { background: #7f1d1d; color: #fecaca; }
+  .badge.code { background: #1e3a8a; color: #93c5fd; }
+  .badge.pending { background: #422006; color: #fbbf24; }
+
+  .step-body {
+    margin-top: 16px; padding-top: 16px; border-top: 1px solid #334155;
+    display: none;
+  }
+  .step.open .step-body { display: block; }
+
+  .checklist { list-style: none; }
+  .checklist li {
+    padding: 8px 0; padding-left: 28px; position: relative; color: #cbd5e1;
+  }
+  .checklist li::before {
+    content: "☐"; position: absolute; left: 0; color: #64748b;
+    font-size: 18px; top: 4px;
+  }
+  .checklist li.checked::before { content: "✅"; }
+  .checklist li.user-task::before { content: "👤"; }
+  .checklist li.code-task::before { content: "💻"; }
+
+  code, .code {
+    background: #0f172a; padding: 2px 8px; border-radius: 4px;
+    font-family: "JetBrains Mono", Consolas, monospace; font-size: 13px;
+    color: #fbbf24;
+  }
+  pre {
+    background: #0f172a; padding: 12px; border-radius: 8px;
+    overflow-x: auto; margin: 8px 0; font-size: 12px;
+    color: #e2e8f0;
+  }
+  pre code { background: none; padding: 0; color: #e2e8f0; }
+
+  .note {
+    background: #1e3a8a; color: #bfdbfe; padding: 12px 16px;
+    border-radius: 8px; margin: 12px 0; font-size: 14px;
+    border-left: 3px solid #3b82f6;
+  }
+  .warn {
+    background: #7c2d12; color: #fed7aa; padding: 12px 16px;
+    border-radius: 8px; margin: 12px 0; font-size: 14px;
+    border-left: 3px solid #f97316;
+  }
+
+  .files { font-size: 13px; color: #94a3b8; margin-top: 8px; }
+  .files a { color: #60a5fa; text-decoration: none; }
+  .files a:hover { text-decoration: underline; }
+
+  .legend {
+    display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap;
+    font-size: 13px; color: #94a3b8;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot {
+    width: 12px; height: 12px; border-radius: 50%;
+  }
+
+  details summary { cursor: pointer; user-select: none; }
+
+  .footer {
+    margin-top: 48px; padding-top: 24px; border-top: 1px solid #334155;
+    color: #64748b; font-size: 13px; text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>🚽 비데앱 출시 진행 대시보드</h1>
+  <p class="subtitle">전국 비데 화장실 찾기 안드로이드 앱 · 1~12단계 체크리스트</p>
+
+  <div style="background:#064e3b;color:#a7f3d0;padding:16px 20px;border-radius:12px;margin-bottom:24px;border-left:4px solid #10b981;">
+    <strong>✅ DEMO BUILD 성공!</strong> <code style="background:#022c22;color:#a7f3d0;">app-debug.apk</code> 생성됨 (60.83 MB).
+    Firebase/카카오 키 없이도 더미 데이터로 동작. 폰에 설치해서 바로 확인 가능.
+    <br>
+    <a href="docs/RUN_DEMO.md" style="color:#6ee7b7;font-weight:600;">→ 데모 실행 가이드 보기</a>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+  </div>
+  <p class="progress-text" id="progressText">0 / 12 단계 완료</p>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div>코드 완료</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>진행 중</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div>사용자 액션 필요</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#475569"></div>대기</div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="step user-action" data-status="user">
+    <div class="step-header" onclick="toggleStep(this)">
+      <div class="step-number">1</div>
+      <div class="step-title">Firebase 프로젝트 + 카카오 디벨로퍼 등록</div>
+      <span class="badge user">사용자 액션</span>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li class="user-task"><a href="https://console.firebase.google.com" style="color:#60a5fa">Firebase Console</a>에서 프로젝트 생성 (이름: bidet-app)</li>
+        <li class="user-task">안드로이드 앱 추가 · 패키지명 <code>com.bidet.app</code></li>
+        <li class="user-task">디버그 SHA-1 등록 (아래 명령으로 확인)</li>
+        <li class="user-task"><code>google-services.json</code> 다운 → <code>app/</code> 폴더에 배치</li>
+        <li class="user-task">Firestore 활성화 (서울 <code>asia-northeast3</code>)</li>
+        <li class="user-task">Authentication 활성화 (Google + 카카오 OIDC)</li>
+        <li class="user-task">Storage 활성화 (서울)</li>
+        <li class="user-task"><a href="https://developers.kakao.com" style="color:#60a5fa">카카오 디벨로퍼</a>에서 앱 추가</li>
+        <li class="user-task">네이티브 앱 키 / REST API 키 발급 → <code>local.properties</code> 입력</li>
+        <li class="user-task">키 해시 등록 (디버그)</li>
+        <li class="user-task">지도 SDK 사용 신청 (필수)</li>
+        <li class="user-task">카카오 로그인 활성화 (Profile/Email)</li>
+      </ul>
+      <pre><code># 디버그 SHA-1 확인 (PowerShell)
+keytool -list -v -alias androiddebugkey ^
+  -keystore "$env:USERPROFILE\.android\debug.keystore" ^
+  -storepass android -keypass android
+
+# 카카오 키 해시 (디버그)
+keytool -exportcert -alias androiddebugkey ^
+  -keystore "$env:USERPROFILE\.android\debug.keystore" ^
+  -storepass android -keypass android | openssl sha1 -binary | openssl base64</code></pre>
+      <div class="warn">⚠️ 이 단계는 자동화 불가. 사용자 계정 로그인 필요. 예상 1~2시간.</div>
+      <div class="files">📄 가이드: <a href="docs/SETUP.md">docs/SETUP.md</a></div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step in-progress" data-status="progress">
+    <div class="step-header" onclick="toggleStep(this)">
+      <div class="step-number">2</div>
+      <div class="step-title">DB 스키마 적용 + 시드 데이터 적재</div>
+      <span class="badge pending">다른 프롬프트</span>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li class="checked">DB 스키마 명세 작성 완료 (<a href="docs/DB_SCHEMA.md" style="color:#60a5fa">docs/DB_SCHEMA.md</a>)</li>
+        <li>Firestore 컬렉션 생성 (toilets, reviews, users, reports)</li>
+        <li>보안 규칙 배포</li>
+        <li>시드 데이터 적재 (Python 파이프라인 사용)</li>
+      </ul>
+      <div class="note">💡 별도 프롬프트에서 Python 수집 파이프라인 작업 중 (<code>collectors/</code>, <code>pipeline.py</code> 확인). 이 단계는 그쪽에서 처리.</div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step done" data-status="done">
+    <div class="step-header" onclick="toggleStep(this)">
+      <div class="step-number">3</div>
+      <div class="step-title">카카오맵 SDK 실제 통합</div>
+      <span class="badge done">코드 완료</span>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li class="checked code-task">MapView를 Compose에서 AndroidView로 통합</li>
+        <li class="checked code-task">카카오맵 라이프사이클 콜백 처리</li>
+        <li class="checked code-task">비데 화장실 마커 표시</li>
+        <li class="checked code-task">마커 클릭 → 상세화면 이동</li>
+        <li class="checked code-task">카메라 이동 시 데이터 재로드</li>
+      </ul>
+      <div class="files">📄 <a href="app/src/main/java/com/bidet/app/ui/screens/map/MapScreen.kt">MapScreen.kt</a></div>
+      <div class="warn">⚠️ 실제 동작은 Step 1 완료 후 (카카오 키 필요)</div>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step done" data-status="done">
+    <div class="step-header" onclick="toggleStep(this)">
+      <div class="step-number">4</div>
+      <div class="step-title">로그인 (Google + 카카오)</div>
+      <span class="badge done">코드 완료</span>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li class="checked code-task">Firebase Auth + Google Sign-In (Credential Manager)</li>
+        <li class="checked code-task">카카오 로그인 → Firebase Custom Token (Cloud Function 필요 - 가이드 제공)</li>
+        <li class="checked code-task">AuthViewModel + Repository 연결</li>
+        <li class="checked code-task">자동 로그인 (auth state flow)</li>
+      </ul>
+      <div class="files">📄 <a href="app/src/main/java/com/bidet/app/ui/screens/auth/AuthScreen.kt">AuthScreen.kt</a></div>
+    </div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="step done" data-status="done">
+    <div class="step-header" onclick="toggleStep(this)">
+      <div class="step-number">5</div>
+      <div class="step-title">위치 권한 + 현위치</div>
+      <span class="badge done">코드 완료</span>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li class="checked code-task">런타임 권한 요청 (Accompanist 없이 androidx로)</li>
+        <li class="checked code-task">FusedLocationProviderClient로 현위치 획득</li>
+        <li class="checked code-task">권한 거부 시 fallback (서울시청 기본)</li>
+        <li class="checked code-task">지도 카메라 자동 이동</li>
+      </ul>
+      <div class="files">📄 <a href="app/src/main/java/com/bidet/app/util/LocationHelper.kt">LocationHelper.kt</a></div>
+    </div>
+  </div>
+
+  <!-- STEP 6 -->
+  <div class="step done" data-status="done">
+    <div class="step-header" onclick="toggleStep(this)">
+      <div class="step-number">6</div>
+      <div class="step-title">사진 업로드 + 리뷰 + 즐겨찾기</div>
+      <span class="badge done">코드 완료</span>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li class="checked code-task">사진 picker (PhotoPicker API)</li>
+        <li class="checked code-task">Firebase Storage 업로드</li>
+        <li class="checked code-task">리뷰 작성 다이얼로그</li>
+        <li class="checked code-task">즐겨찾기 토글 (User.favoriteToiletIds)</li>
+        <li class="checked code-task">길찾기 인텐트 (카카오맵)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- STEP 7 -->
+  <div class="step done" data-status="done">
+    <div class="step-header" onclick="toggleStep(this)">
+      <div class="step-number">7</div>
+      <div class="step-title">디자인 (아이콘, 스플래시, 색상)</div>
+      <span class="badge done">코드 완료</span>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li class="checked code-task">Material 3 컬러 토큰 (Light/Dark)</li>
+        <li class="checked code-task">스플래시 화면 (Splash Screen API)</li>
+        <li class="checked code-task">앱 아이콘 vector placeholder (실제 디자인은 사용자가 교체)</li>
+        <li class="checked code-task">Typography 정리</li>
+      </ul>
+      <div class="warn">⚠️ 실제 아이콘 디자인은 사용자가 직접 제작/의뢰 필요</div>
+    </div>
+  </div>
+
+  <!-- STEP 8 -->
+  <div class="step user-action" data-status="user">
+    <div class="step-header" onclick="toggleStep(this)">
+      <div class="step-number">8</div>
+      <div class="step-title">실기기 테스트 + 버그 잡기</div>
+      <span class="badge user">사용자 액션</span>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li class="user-task">Android Studio에서 Gradle Sync 성공 확인</li>
+        <li class="user-task">실기기/에뮬레이터에서 디버그 빌드</li>
+        <li class="user-task">테스트 시나리오: 지도 표시 → 마커 클릭 → 상세 → 길찾기</li>
+        <li class="user-task">로그인 플로우 테스트</li>
+        <li class="user-task">제보 → Firestore 저장 확인</li>
+        <li class="user-task">권한 거부 시 동작 확인</li>
+      </ul>
+      <div class="note">💡 Firestore에 시드 데이터가 있어야 의미있는 테스트 가능 (Step 2 의존)</div>
+    </div>
+  </div>
+
+  <!-- STEP 9 -->
+  <div class="step done" data-status="done">
+    <div class="step-header" onclick="toggleStep(this)">
+      <div class="step-number">9</div>
+      <div class="step-title">릴리즈 키스토어 + 서명 빌드</div>
+      <span class="badge done">설정 완료</span>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li class="checked code-task">build.gradle.kts signing config 추가</li>
+        <li class="checked code-task">keystore.properties.example 제공</li>
+        <li class="checked code-task">키스토어 생성 PowerShell 스크립트 (<code>scripts/create_keystore.ps1</code>)</li>
+        <li class="checked code-task">ProGuard 룰 강화</li>
+        <li class="user-task">사용자: 키스토어 생성 (1회) — 매우 중요, 분실 시 앱 업데이트 불가</li>
+        <li class="user-task">사용자: <code>keystore.properties</code> 작성</li>
+        <li class="user-task">사용자: <code>gradlew bundleRelease</code> 실행</li>
+      </ul>
+      <pre><code># 키스토어 생성 (1회만)
+.\scripts\create_keystore.ps1
+
+# 릴리즈 AAB 빌드
+.\gradlew bundleRelease
+
+# 결과: app/build/outputs/bundle/release/app-release.aab</code></pre>
+      <div class="warn">🔐 <strong>keystore 파일과 비밀번호는 절대 잃어버리면 안 됩니다.</strong> 분실 = 같은 앱 업데이트 영구 불가</div>
+    </div>
+  </div>
+
+  <!-- STEP 10 -->
+  <div class="step user-action" data-status="user">
+    <div class="step-header" onclick="toggleStep(this)">
+      <div class="step-number">10</div>
+      <div class="step-title">Play Console 가입 + 스토어 등록</div>
+      <span class="badge user">사용자 액션</span>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li class="user-task"><a href="https://play.google.com/console" style="color:#60a5fa">Google Play Console</a> 가입 ($25 1회)</li>
+        <li class="user-task">앱 만들기 → 이름, 카테고리, 등급</li>
+        <li class="user-task">스토어 등재 정보: 짧은 설명, 자세한 설명, 스크린샷, 피처 그래픽</li>
+        <li class="user-task">AAB 업로드 (내부 테스트 트랙부터 권장)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- STEP 11 -->
+  <div class="step user-action" data-status="user">
+    <div class="step-header" onclick="toggleStep(this)">
+      <div class="step-number">11</div>
+      <div class="step-title">개인정보처리방침 작성 (필수)</div>
+      <span class="badge user">사용자 액션</span>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li class="user-task">개인정보 처리방침 작성 (위치, 이메일, 사진 사용 명시)</li>
+        <li class="user-task">웹 페이지로 호스팅 (GitHub Pages, Notion 공개 페이지 등)</li>
+        <li class="user-task">Play Console에 URL 등록</li>
+        <li class="user-task">데이터 보안 양식 작성</li>
+      </ul>
+      <div class="note">💡 템플릿 사이트: <a href="https://app-privacy-policy-generator.firebaseapp.com/" style="color:#60a5fa">Privacy Policy Generator</a></div>
+    </div>
+  </div>
+
+  <!-- STEP 12 -->
+  <div class="step blocked" data-status="blocked">
+    <div class="step-header" onclick="toggleStep(this)">
+      <div class="step-number">12</div>
+      <div class="step-title">심사 제출 → 승인 대기</div>
+      <span class="badge user">대기</span>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li class="user-task">프로덕션 트랙으로 출시 신청</li>
+        <li class="user-task">심사 대기 (보통 1~14일)</li>
+        <li class="user-task">반려 시 사유 확인 후 재제출</li>
+      </ul>
+      <div class="note">🚀 승인되면 출시 완료!</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>업데이트: <span id="lastUpdate"></span></p>
+    <p style="margin-top:8px">코드 6개 단계 자동 완료 (3,4,5,6,7,9) · 사용자 액션 5개 단계 (1,8,10,11,12) · 외부 처리 1개 (2)</p>
+  </div>
+</div>
+
+<script>
+  function toggleStep(headerEl) {
+    headerEl.parentElement.classList.toggle('open');
+  }
+
+  // 진행률 계산
+  const steps = document.querySelectorAll('.step');
+  const done = document.querySelectorAll('.step.done').length;
+  const total = steps.length;
+  const percent = Math.round((done / total) * 100);
+  document.getElementById('progressFill').style.width = percent + '%';
+  document.getElementById('progressText').textContent =
+    `${done} / ${total} 단계 완료 (${percent}%) · 사용자 액션 ${document.querySelectorAll('.step.user-action').length}개 남음`;
+
+  // 시간 표시
+  document.getElementById('lastUpdate').textContent = new Date().toLocaleString('ko-KR');
+
+  // Step 1, 3 자동 펼치기 (사용자가 다음에 해야할 것)
+  document.querySelectorAll('.step')[0].classList.add('open');
+</script>
+</body>
+</html>

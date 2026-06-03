@@ -1,0 +1,212 @@
+[
+  {
+    "id": "loc_0010",
+    "name": "1·2호선 시청역 장애인화장실",
+    "address": "서울특별시 중구 세종대로 지하 101",
+    "lat": 37.5641,
+    "lng": 126.9774,
+    "geohash": "wydm9qq4e",
+    "category": "SUBWAY",
+    "hasBidet": true,
+    "bidetVerified": true,
+    "bidetCount": 0,
+    "gender": "UNKNOWN",
+    "accessible": true,
+    "openHours": null,
+    "is24h": false,
+    "isFree": true,
+    "rating": 0.0,
+    "reviewCount": 0,
+    "photoUrls": [],
+    "sources": [
+      {
+        "type": "NEWS",
+        "url": "https://mdtoday.co.kr/news/view",
+        "description": "장애인용 화장실에 비데가 시범 설치된 지하철역은 1·2호선 시청역",
+        "collectedAt": 1780108566812
+      }
+    ],
+    "createdAt": 1780108566812,
+    "updatedAt": 1780108566812
+  },
+  {
+    "id": "loc_0011",
+    "name": "3호선 종로3가역 장애인화장실",
+    "address": "서울특별시 종로구 종로 지하 129",
+    "lat": 37.5705,
+    "lng": 126.992,
+    "geohash": "wydm9z8b0",
+    "category": "SUBWAY",
+    "hasBidet": true,
+    "bidetVerified": true,
+    "bidetCount": 0,
+    "gender": "UNKNOWN",
+    "accessible": true,
+    "openHours": null,
+    "is24h": false,
+    "isFree": true,
+    "rating": 0.0,
+    "reviewCount": 0,
+    "photoUrls": [],
+    "sources": [
+      {
+        "type": "NEWS",
+        "url": "https://mdtoday.co.kr/news/view",
+        "description": "장애인용 화장실에 비데가 시범 설치된 지하철역은 ... 3호선 종로3가역",
+        "collectedAt": 1780108566812
+      }
+    ],
+    "createdAt": 1780108566812,
+    "updatedAt": 1780108566812
+  },
+  {
+    "id": "loc_0012",
+    "name": "4호선 숙대입구역 장애인화장실",
+    "address": "서울특별시 용산구 청파로 378",
+    "lat": 37.5443,
+    "lng": 126.9714,
+    "geohash": "wydm969z2",
+    "category": "SUBWAY",
+    "hasBidet": true,
+    "bidetVerified": true,
+    "bidetCount": 0,
+    "gender": "UNKNOWN",
+    "accessible": true,
+    "openHours": null,
+    "is24h": false,
+    "isFree": true,
+    "rating": 0.0,
+    "reviewCount": 0,
+    "photoUrls": [],
+    "sources": [
+      {
+        "type": "NEWS",
+        "url": "https://mdtoday.co.kr/news/view",
+        "description": "장애인용 화장실에 비데가 시범 설치된 지하철역은 ... 4호선 숙대입구역",
+        "collectedAt": 1780108566812
+      }
+    ],
+    "createdAt": 1780108566812,
+    "updatedAt": 1780108566812
+  },
+  {
+    "id": "loc_0008",
+    "name": "인천국제공항 제2터미널 마티나 골드 라운지 화장실",
+    "address": "인천광역시 중구 공항로 272",
+    "lat": 37.4691,
+    "lng": 126.4498,
+    "geohash": "wy9vjmjcm",
+    "category": "AIRPORT",
+    "hasBidet": true,
+    "bidetVerified": false,
+    "bidetCount": 0,
+    "gender": "UNKNOWN",
+    "accessible": false,
+    "openHours": null,
+    "is24h": false,
+    "isFree": true,
+    "rating": 0.0,
+    "reviewCount": 0,
+    "photoUrls": [],
+    "sources": [
+      {
+        "type": "BLOG_REVIEW",
+        "url": "https://story-collector.tistory.com",
+        "description": "변기에 비데가 설치되어 있었고 깨끗하게 관리는 상태였습니다",
+        "collectedAt": 1780108566812
+      }
+    ],
+    "createdAt": 1780108566812,
+    "updatedAt": 1780108566812
+  },
+  {
+    "id": "loc_0009",
+    "name": "김해국제공항 국제선 대한항공 KAL 라운지 화장실",
+    "address": "부산광역시 강서구 공항진입로 108",
+    "lat": 35.1796,
+    "lng": 128.9385,
+    "geohash": "wy78nh60h",
+    "category": "AIRPORT",
+    "hasBidet": true,
+    "bidetVerified": false,
+    "bidetCount": 0,
+    "gender": "UNKNOWN",
+    "accessible": false,
+    "openHours": null,
+    "is24h": false,
+    "isFree": true,
+    "rating": 0.0,
+    "reviewCount": 0,
+    "photoUrls": [],
+    "sources": [
+      {
+        "type": "BLOG_REVIEW",
+        "url": "https://intothebluecrystal.tistory.com",
+        "description": "변기에는 비데가 설치되어 있고",
+        "collectedAt": 1780108566812
+      }
+    ],
+    "createdAt": 1780108566812,
+    "updatedAt": 1780108566812
+  },
+  {
+    "id": "loc_0013",
+    "name": "KTX 서울역 화장실 (1층/지하1층/지상3층 중 비데 있음)",
+    "address": "서울특별시 용산구 한강대로 405",
+    "lat": 37.5547,
+    "lng": 126.9707,
+    "geohash": "wydm9k95z",
+    "category": "TRAIN_STATION",
+    "hasBidet": true,
+    "bidetVerified": false,
+    "bidetCount": 0,
+    "gender": "UNKNOWN",
+    "accessible": false,
+    "openHours": null,
+    "is24h": false,
+    "isFree": true,
+    "rating": 0.0,
+    "reviewCount": 0,
+    "photoUrls": [],
+    "sources": [
+      {
+        "type": "BLOG_REVIEW",
+        "url": "https://www.a-ha.io",
+        "description": "서울역 내부의 대표적인 화장실은 1층과 지하 1층, 그리고 지상 3층에 위치... 이 중에서도 비데가",
+        "collectedAt": 1780108566812
+      }
+    ],
+    "createdAt": 1780108566812,
+    "updatedAt": 1780108566812
+  },
+  {
+    "id": "loc_0014",
+    "name": "롯데월드몰 에비뉴 화장실",
+    "address": "서울특별시 송파구 올림픽로 300",
+    "lat": 37.5132,
+    "lng": 127.1028,
+    "geohash": "wydmkm16j",
+    "category": "SHOPPING_MALL",
+    "hasBidet": true,
+    "bidetVerified": false,
+    "bidetCount": 0,
+    "gender": "UNKNOWN",
+    "accessible": false,
+    "openHours": null,
+    "is24h": false,
+    "isFree": true,
+    "rating": 0.0,
+    "reviewCount": 0,
+    "photoUrls": [],
+    "sources": [
+      {
+        "type": "BLOG_REVIEW",
+        "url": "https://blog.naver.com/bokdengyee",
+        "description": "개개의 화장실마다 큰 거울과 비데설치되어 있고",
+        "collectedAt": 1780108566812
+      }
+    ],
+    "createdAt": 1780108566812,
+    "updatedAt": 1780108566812
+  }
+]

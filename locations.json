@@ -1,0 +1,218 @@
+[
+  {
+    "id": 2,
+    "place_name": "영천휴게소 가족화장실",
+    "address": null,
+    "latitude": null,
+    "longitude": null,
+    "place_type": "휴게소",
+    "has_bidet": 1,
+    "confidence": 85,
+    "sources": [
+      {
+        "source_type": "official_site",
+        "source_url": "https://sotong.go.kr/front/otherPlatformViewPage",
+        "excerpt": "영천휴게소의 가족화장실에 비데가 설치되어 있어서 사용을 하는데 많이 편했던 것을 경험",
+        "confidence": 85
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "place_name": "보성녹차휴게소(목포방향) 장애인화장실",
+    "address": null,
+    "latitude": null,
+    "longitude": null,
+    "place_type": "휴게소",
+    "has_bidet": 1,
+    "confidence": 80,
+    "sources": [
+      {
+        "source_type": "news",
+        "source_url": "https://www.ajunews.com",
+        "excerpt": "목포방향 보성녹차휴게소, 장애인화장실 비데 설치 (아주경제 기사 제목)",
+        "confidence": 80
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "place_name": "보성녹차휴게소(광양방향) 장애인화장실",
+    "address": null,
+    "latitude": null,
+    "longitude": null,
+    "place_type": "휴게소",
+    "has_bidet": 1,
+    "confidence": 80,
+    "sources": [
+      {
+        "source_type": "news",
+        "source_url": "https://www.hkbs.co.kr",
+        "excerpt": "보성녹차(광양)휴게소, 장애인 화장실 리모델링 및 비데 설치 (환경일보 기사 제목)",
+        "confidence": 80
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "place_name": "1·2호선 시청역 장애인화장실",
+    "address": "서울특별시 중구 세종대로 지하 101",
+    "latitude": null,
+    "longitude": null,
+    "place_type": "지하철역/장애인화장실",
+    "has_bidet": 1,
+    "confidence": 80,
+    "sources": [
+      {
+        "source_type": "news",
+        "source_url": "https://mdtoday.co.kr/news/view",
+        "excerpt": "장애인용 화장실에 비데가 시범 설치된 지하철역은 1·2호선 시청역",
+        "confidence": 80
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "place_name": "3호선 종로3가역 장애인화장실",
+    "address": "서울특별시 종로구 종로 지하 129",
+    "latitude": null,
+    "longitude": null,
+    "place_type": "지하철역/장애인화장실",
+    "has_bidet": 1,
+    "confidence": 80,
+    "sources": [
+      {
+        "source_type": "news",
+        "source_url": "https://mdtoday.co.kr/news/view",
+        "excerpt": "장애인용 화장실에 비데가 시범 설치된 지하철역은 ... 3호선 종로3가역",
+        "confidence": 80
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "place_name": "4호선 숙대입구역 장애인화장실",
+    "address": "서울특별시 용산구 청파로 378",
+    "latitude": null,
+    "longitude": null,
+    "place_type": "지하철역/장애인화장실",
+    "has_bidet": 1,
+    "confidence": 80,
+    "sources": [
+      {
+        "source_type": "news",
+        "source_url": "https://mdtoday.co.kr/news/view",
+        "excerpt": "장애인용 화장실에 비데가 시범 설치된 지하철역은 ... 4호선 숙대입구역",
+        "confidence": 80
+      }
+    ]
+  },
+  {
+    "id": 1,
+    "place_name": "안산휴게소 강릉방향",
+    "address": null,
+    "latitude": null,
+    "longitude": null,
+    "place_type": "휴게소",
+    "has_bidet": 1,
+    "confidence": 60,
+    "sources": [
+      {
+        "source_type": "naver_blog",
+        "source_url": "https://m.blog.naver.com",
+        "excerpt": "안산휴게소 전기차 충전소 라운지와 비데있는 화장실 ... 2층은 강릉방향",
+        "confidence": 60
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "place_name": "내촌휴게소",
+    "address": null,
+    "latitude": null,
+    "longitude": null,
+    "place_type": "휴게소",
+    "has_bidet": 1,
+    "confidence": 60,
+    "sources": [
+      {
+        "source_type": "naver_blog",
+        "source_url": "https://blog.naver.com/yuhama_sul",
+        "excerpt": "비데는 있으나 휴지는 없었음",
+        "confidence": 60
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "place_name": "인천국제공항 제2터미널 마티나 골드 라운지 화장실",
+    "address": "인천광역시 중구 공항로 272",
+    "latitude": null,
+    "longitude": null,
+    "place_type": "공항/라운지",
+    "has_bidet": 1,
+    "confidence": 60,
+    "sources": [
+      {
+        "source_type": "naver_blog",
+        "source_url": "https://story-collector.tistory.com",
+        "excerpt": "변기에 비데가 설치되어 있었고 깨끗하게 관리는 상태였습니다",
+        "confidence": 60
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "place_name": "김해국제공항 국제선 대한항공 KAL 라운지 화장실",
+    "address": "부산광역시 강서구 공항진입로 108",
+    "latitude": null,
+    "longitude": null,
+    "place_type": "공항/라운지",
+    "has_bidet": 1,
+    "confidence": 60,
+    "sources": [
+      {
+        "source_type": "naver_blog",
+        "source_url": "https://intothebluecrystal.tistory.com",
+        "excerpt": "변기에는 비데가 설치되어 있고",
+        "confidence": 60
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "place_name": "KTX 서울역 화장실 (1층/지하1층/지상3층 중 비데 있음)",
+    "address": "서울특별시 용산구 한강대로 405",
+    "latitude": null,
+    "longitude": null,
+    "place_type": "철도역",
+    "has_bidet": 1,
+    "confidence": 60,
+    "sources": [
+      {
+        "source_type": "naver_blog",
+        "source_url": "https://www.a-ha.io",
+        "excerpt": "서울역 내부의 대표적인 화장실은 1층과 지하 1층, 그리고 지상 3층에 위치... 이 중에서도 비데가",
+        "confidence": 60
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "place_name": "롯데월드몰 에비뉴 화장실",
+    "address": "서울특별시 송파구 올림픽로 300",
+    "latitude": null,
+    "longitude": null,
+    "place_type": "복합몰",
+    "has_bidet": 1,
+    "confidence": 60,
+    "sources": [
+      {
+        "source_type": "naver_blog",
+        "source_url": "https://blog.naver.com/bokdengyee",
+        "excerpt": "개개의 화장실마다 큰 거울과 비데설치되어 있고",
+        "confidence": 60
+      }
+    ]
+  }
+]
