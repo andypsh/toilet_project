@@ -7,16 +7,18 @@ main                  ← 출시용 (보호됨, 직접 푸시 금지)
   ↑ PR
 dev                   ← 통합 개발 브랜치
   ↑ PR
-  ├─ feature_andy     ← @andypsh 작업 공간
-  └─ feature_dodo     ← @dododo9511 작업 공간
+  ├─ feature_andy     ← @andypsh (백엔드)
+  └─ feature_dodo     ← @dododo9511 (프론트)
 ```
 
 ## 누가 어디서 작업?
 
-| 사람 | 작업 브랜치 |
-|---|---|
-| @andypsh | `feature_andy` |
-| @dododo9511 | `feature_dodo` |
+| 사람 | 작업 브랜치 | 영역 | 디렉토리 |
+|---|---|---|---|
+| **@andypsh** (백) | `feature_andy` | 데이터 수집·Repository·Firestore | `backend/`, `mobile/app/src/main/java/com/bidet/app/{data,domain,di}/` |
+| **@dododo9511** (프론트) | `feature_dodo` | UI/UX·Compose 화면·디자인 | `mobile/app/src/main/java/com/bidet/app/ui/`, `mobile/app/src/main/res/` |
+
+GitHub은 [CODEOWNERS](CODEOWNERS) 로 리뷰어를 자동 지정합니다.
 
 ## 표준 작업 흐름
 
@@ -36,7 +38,7 @@ git push origin feature_andy
 
 ### 3. dev로 머지 (PR)
 1. GitHub에서 `feature_andy` → `dev` 로 Pull Request 생성
-2. 본인 (or 친구)이 리뷰
+2. 본인 (or 친구)이 리뷰 — CODEOWNERS에 따라 자동 요청
 3. Merge
 
 ### 4. main으로 출시 (PR)
@@ -57,22 +59,19 @@ git push origin feature_andy
 ```
 
 ### 같은 파일 동시 수정 방지
-- **Andy**: 안드로이드 앱 코드 (`app/`)
-- **Dodo**: 데이터 수집 파이프라인 (`collectors/`, `*.py`)
-- 공통 (`README`, `docs/`, `BRANCHING.md`): 사전 협의
-
-이렇게 영역을 나누면 충돌 거의 안 남.
+폴더가 거의 겹치지 않게 분리돼 있어 충돌 거의 안 남.
+- **공유 영역** (`mobile/build.gradle.kts`, `mobile/app/build.gradle.kts`, `mobile/settings.gradle.kts`, `mobile/app/src/main/AndroidManifest.xml`, `README`, `docs/`) 만 사전 협의.
 
 ## 절대 하지 말 것
 
-❌ `main` 에 직접 push  
-❌ `dev` 에 직접 push (PR로만)  
-❌ 다른 사람의 feature 브랜치에 push  
-❌ `git push --force` on main/dev  
+❌ `main` 에 직접 push
+❌ `dev` 에 직접 push (PR로만)
+❌ 다른 사람의 feature 브랜치에 push
+❌ `git push --force` on main/dev
 
 ## GitHub Branch Protection (관리자가 설정)
 
-레포 Settings → Branches → Add rule 에서:
+레포 Settings → Branches → Add rule:
 
 ### `main` 보호
 - ✅ Require a pull request before merging
@@ -91,34 +90,17 @@ git push origin feature_andy
 3. **base:** `dev` (받는 쪽)
 4. **compare:** `feature_andy` (보내는 쪽)
 5. 제목/설명 작성 → **Create pull request**
-6. 리뷰어 본인 또는 친구 지정
+6. 리뷰어 자동 할당됨 (CODEOWNERS 매칭)
 7. 머지 클릭
 
 ## 자주 쓰는 명령어 치트시트
 
 ```bash
-# 현재 브랜치 확인
-git status
-
-# 브랜치 목록 (원격 포함)
-git branch -a
-
-# 원격 변경사항 받아오기
-git fetch origin
-
-# 로컬 브랜치에 원격 최신 머지
-git pull origin <브랜치명>
-
-# 다른 브랜치로 이동
-git checkout <브랜치명>
-
-# 새 브랜치 만들고 이동
-git checkout -b <새-브랜치명>
-
-# 마지막 커밋 메시지 수정 (push 전에만)
-git commit --amend -m "새 메시지"
-
-# 변경사항 일시 보관 (다른 브랜치로 이동하기 전)
-git stash
-git stash pop  # 돌아와서 복원
+git status                       # 현재 브랜치 확인
+git branch -a                    # 브랜치 목록 (원격 포함)
+git fetch origin                 # 원격 변경사항 받아오기
+git pull origin <브랜치명>       # 로컬에 원격 최신 머지
+git checkout <브랜치명>          # 다른 브랜치로 이동
+git checkout -b <새-브랜치명>    # 새 브랜치 만들고 이동
+git stash / git stash pop        # 변경사항 임시 보관/복원
 ```

@@ -23,11 +23,11 @@
         "type": "NEWS",
         "url": "https://mdtoday.co.kr/news/view",
         "description": "장애인용 화장실에 비데가 시범 설치된 지하철역은 1·2호선 시청역",
-        "collectedAt": 1780108566812
+        "collectedAt": 1780473349295
       }
     ],
-    "createdAt": 1780108566812,
-    "updatedAt": 1780108566812
+    "createdAt": 1780473349295,
+    "updatedAt": 1780473349295
   },
   {
     "id": "loc_0011",
@@ -53,11 +53,11 @@
         "type": "NEWS",
         "url": "https://mdtoday.co.kr/news/view",
         "description": "장애인용 화장실에 비데가 시범 설치된 지하철역은 ... 3호선 종로3가역",
-        "collectedAt": 1780108566812
+        "collectedAt": 1780473349295
       }
     ],
-    "createdAt": 1780108566812,
-    "updatedAt": 1780108566812
+    "createdAt": 1780473349295,
+    "updatedAt": 1780473349295
   },
   {
     "id": "loc_0012",
@@ -83,11 +83,11 @@
         "type": "NEWS",
         "url": "https://mdtoday.co.kr/news/view",
         "description": "장애인용 화장실에 비데가 시범 설치된 지하철역은 ... 4호선 숙대입구역",
-        "collectedAt": 1780108566812
+        "collectedAt": 1780473349295
       }
     ],
-    "createdAt": 1780108566812,
-    "updatedAt": 1780108566812
+    "createdAt": 1780473349295,
+    "updatedAt": 1780473349295
   },
   {
     "id": "loc_0008",
@@ -113,11 +113,11 @@
         "type": "BLOG_REVIEW",
         "url": "https://story-collector.tistory.com",
         "description": "변기에 비데가 설치되어 있었고 깨끗하게 관리는 상태였습니다",
-        "collectedAt": 1780108566812
+        "collectedAt": 1780473349295
       }
     ],
-    "createdAt": 1780108566812,
-    "updatedAt": 1780108566812
+    "createdAt": 1780473349295,
+    "updatedAt": 1780473349295
   },
   {
     "id": "loc_0009",
@@ -143,11 +143,11 @@
         "type": "BLOG_REVIEW",
         "url": "https://intothebluecrystal.tistory.com",
         "description": "변기에는 비데가 설치되어 있고",
-        "collectedAt": 1780108566812
+        "collectedAt": 1780473349295
       }
     ],
-    "createdAt": 1780108566812,
-    "updatedAt": 1780108566812
+    "createdAt": 1780473349295,
+    "updatedAt": 1780473349295
   },
   {
     "id": "loc_0013",
@@ -173,11 +173,11 @@
         "type": "BLOG_REVIEW",
         "url": "https://www.a-ha.io",
         "description": "서울역 내부의 대표적인 화장실은 1층과 지하 1층, 그리고 지상 3층에 위치... 이 중에서도 비데가",
-        "collectedAt": 1780108566812
+        "collectedAt": 1780473349295
       }
     ],
-    "createdAt": 1780108566812,
-    "updatedAt": 1780108566812
+    "createdAt": 1780473349295,
+    "updatedAt": 1780473349295
   },
   {
     "id": "loc_0014",
@@ -203,10 +203,10 @@
         "type": "BLOG_REVIEW",
         "url": "https://blog.naver.com/bokdengyee",
         "description": "개개의 화장실마다 큰 거울과 비데설치되어 있고",
-        "collectedAt": 1780108566812
+        "collectedAt": 1780473349295
       }
     ],
-    "createdAt": 1780108566812,
-    "updatedAt": 1780108566812
+    "createdAt": 1780473349295,
+    "updatedAt": 1780473349295
   }
 ]

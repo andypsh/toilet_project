@@ -1,0 +1,31 @@
+# GitHub CODEOWNERS — 디렉토리별 리뷰 자동 할당
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-security/managing-repository-settings/about-code-owners
+
+# 기본: 변경된 영역에 해당하는 담당자에게 리뷰 요청
+# (아래로 갈수록 더 구체적인 규칙이 우선)
+
+# 전체 fallback — 명시되지 않은 파일은 양쪽 다 review
+*                                                       @andypsh @dododo9511
+
+# ───────── 프론트 (UI/UX) — @dododo9511 ─────────
+/mobile/app/src/main/java/com/bidet/app/ui/             @dododo9511
+/mobile/app/src/main/res/                               @dododo9511
+
+# ───────── 친구가 수집한 자료 — @dododo9511 ─────────
+/dodo_data/                                             @dododo9511
+
+# ───────── 백엔드 (데이터·Repository·Firestore) — @andypsh ─────────
+/backend/                                               @andypsh
+/mobile/app/src/main/java/com/bidet/app/data/           @andypsh
+/mobile/app/src/main/java/com/bidet/app/domain/         @andypsh
+/mobile/app/src/main/java/com/bidet/app/di/             @andypsh
+
+# ───────── 공유 (양쪽 다 리뷰) ─────────
+/mobile/build.gradle.kts                                @andypsh @dododo9511
+/mobile/app/build.gradle.kts                            @andypsh @dododo9511
+/mobile/settings.gradle.kts                             @andypsh @dododo9511
+/mobile/app/src/main/AndroidManifest.xml                @andypsh @dododo9511
+/docs/                                                  @andypsh @dododo9511
+/README.md                                              @andypsh @dododo9511
+/BRANCHING.md                                           @andypsh @dododo9511
+/CODEOWNERS                                             @andypsh @dododo9511
