@@ -3,9 +3,9 @@
     "id": "loc_0010",
     "name": "1·2호선 시청역 장애인화장실",
     "address": "서울특별시 중구 세종대로 지하 101",
-    "lat": 37.5641,
-    "lng": 126.9774,
-    "geohash": "wydm9qq4e",
+    "lat": 37.56372688,
+    "lng": 126.9754385,
+    "geohash": "wydm9qk8w",
     "category": "SUBWAY",
     "hasBidet": true,
     "bidetVerified": true,
@@ -23,19 +23,19 @@
         "type": "NEWS",
         "url": "https://mdtoday.co.kr/news/view",
         "description": "장애인용 화장실에 비데가 시범 설치된 지하철역은 1·2호선 시청역",
-        "collectedAt": 1780473349295
+        "collectedAt": 1780474782276
       }
     ],
-    "createdAt": 1780473349295,
-    "updatedAt": 1780473349295
+    "createdAt": 1780474782276,
+    "updatedAt": 1780474782276
   },
   {
     "id": "loc_0011",
     "name": "3호선 종로3가역 장애인화장실",
     "address": "서울특별시 종로구 종로 지하 129",
-    "lat": 37.5705,
-    "lng": 126.992,
-    "geohash": "wydm9z8b0",
+    "lat": 37.5715,
+    "lng": 126.989059,
+    "geohash": "wydm9xwtg",
     "category": "SUBWAY",
     "hasBidet": true,
     "bidetVerified": true,
@@ -53,11 +53,11 @@
         "type": "NEWS",
         "url": "https://mdtoday.co.kr/news/view",
         "description": "장애인용 화장실에 비데가 시범 설치된 지하철역은 ... 3호선 종로3가역",
-        "collectedAt": 1780473349295
+        "collectedAt": 1780474782276
       }
     ],
-    "createdAt": 1780473349295,
-    "updatedAt": 1780473349295
+    "createdAt": 1780474782276,
+    "updatedAt": 1780474782276
   },
   {
     "id": "loc_0012",
@@ -83,11 +83,11 @@
         "type": "NEWS",
         "url": "https://mdtoday.co.kr/news/view",
         "description": "장애인용 화장실에 비데가 시범 설치된 지하철역은 ... 4호선 숙대입구역",
-        "collectedAt": 1780473349295
+        "collectedAt": 1780474782276
       }
     ],
-    "createdAt": 1780473349295,
-    "updatedAt": 1780473349295
+    "createdAt": 1780474782276,
+    "updatedAt": 1780474782276
   },
   {
     "id": "loc_0008",
@@ -113,11 +113,11 @@
         "type": "BLOG_REVIEW",
         "url": "https://story-collector.tistory.com",
         "description": "변기에 비데가 설치되어 있었고 깨끗하게 관리는 상태였습니다",
-        "collectedAt": 1780473349295
+        "collectedAt": 1780474782276
       }
     ],
-    "createdAt": 1780473349295,
-    "updatedAt": 1780473349295
+    "createdAt": 1780474782276,
+    "updatedAt": 1780474782276
   },
   {
     "id": "loc_0009",
@@ -143,19 +143,19 @@
         "type": "BLOG_REVIEW",
         "url": "https://intothebluecrystal.tistory.com",
         "description": "변기에는 비데가 설치되어 있고",
-        "collectedAt": 1780473349295
+        "collectedAt": 1780474782276
       }
     ],
-    "createdAt": 1780473349295,
-    "updatedAt": 1780473349295
+    "createdAt": 1780474782276,
+    "updatedAt": 1780474782276
   },
   {
     "id": "loc_0013",
     "name": "KTX 서울역 화장실 (1층/지하1층/지상3층 중 비데 있음)",
     "address": "서울특별시 용산구 한강대로 405",
-    "lat": 37.5547,
-    "lng": 126.9707,
-    "geohash": "wydm9k95z",
+    "lat": 37.556878,
+    "lng": 126.972578,
+    "geohash": "wydm9m48e",
     "category": "TRAIN_STATION",
     "hasBidet": true,
     "bidetVerified": false,
@@ -173,19 +173,19 @@
         "type": "BLOG_REVIEW",
         "url": "https://www.a-ha.io",
         "description": "서울역 내부의 대표적인 화장실은 1층과 지하 1층, 그리고 지상 3층에 위치... 이 중에서도 비데가",
-        "collectedAt": 1780473349295
+        "collectedAt": 1780474782276
       }
     ],
-    "createdAt": 1780473349295,
-    "updatedAt": 1780473349295
+    "createdAt": 1780474782276,
+    "updatedAt": 1780474782276
   },
   {
     "id": "loc_0014",
     "name": "롯데월드몰 에비뉴 화장실",
     "address": "서울특별시 송파구 올림픽로 300",
-    "lat": 37.5132,
-    "lng": 127.1028,
-    "geohash": "wydmkm16j",
+    "lat": 37.5129211,
+    "lng": 127.1027399,
+    "geohash": "wydmkm12s",
     "category": "SHOPPING_MALL",
     "hasBidet": true,
     "bidetVerified": false,
@@ -203,10 +203,10 @@
         "type": "BLOG_REVIEW",
         "url": "https://blog.naver.com/bokdengyee",
         "description": "개개의 화장실마다 큰 거울과 비데설치되어 있고",
-        "collectedAt": 1780473349295
+        "collectedAt": 1780474782276
       }
     ],
-    "createdAt": 1780473349295,
-    "updatedAt": 1780473349295
+    "createdAt": 1780474782276,
+    "updatedAt": 1780474782276
   }
 ]

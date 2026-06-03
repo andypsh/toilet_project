@@ -13,8 +13,9 @@ CLI 사용:
     python pipeline.py init                 # DB 초기화만
     python pipeline.py collect-naver "키워드1" "키워드2"
     python pipeline.py collect-public       # 공공데이터 수집
+    python pipeline.py collect-seoul        # @dododo9511 마스터 CSV 적재 + 좌표 매칭
     python pipeline.py extract              # raw → locations
-    python pipeline.py geocode              # 주소 → 좌표
+    python pipeline.py geocode              # 주소 → 좌표 (카카오 API)
     python pipeline.py export               # 앱용 JSON 출력
     python pipeline.py run "키워드"         # 위 단계 전부 실행
 """
@@ -27,7 +28,13 @@ import json
 import sys
 from pathlib import Path
 
-from collectors import collect_naver_search, collect_public_toilet, collect_user_report
+from collectors import (
+    collect_naver_search,
+    collect_public_toilet,
+    collect_user_report,
+    load_seoul_master,
+    match_coords_from_master,
+)
 from db import connect, init_db
 from extractor import extract_from_unprocessed
 from geocoder import geocode_missing
@@ -64,6 +71,16 @@ def cmd_collect_user(args: argparse.Namespace) -> None:
             note=args.note,
         )
     print(f"[user] location id={loc_id} 적재.")
+
+
+def cmd_collect_seoul(args: argparse.Namespace) -> None:
+    """@dododo9511 서울 마스터 CSV → seoul_master 테이블 + 우리 locations 좌표 보강."""
+    init_db()
+    with connect() as conn:
+        n = load_seoul_master(conn)
+        print(f"[seoul-master] CSV 적재: +{n}건")
+        u = match_coords_from_master(conn)
+        print(f"[seoul-master] 좌표 보강: {u}건")
 
 
 def cmd_extract(args: argparse.Namespace) -> None:
@@ -141,6 +158,10 @@ def build_parser() -> argparse.ArgumentParser:
     sp = sub.add_parser("collect-public")
     sp.add_argument("--pages", type=int, default=5)
     sp.set_defaults(func=cmd_collect_public)
+
+    sp = sub.add_parser("collect-seoul",
+                        help="@dododo9511 서울 마스터 CSV 적재 + 좌표 매칭")
+    sp.set_defaults(func=cmd_collect_seoul)
 
     sp = sub.add_parser("collect-user")
     sp.add_argument("--place-name", required=True)
