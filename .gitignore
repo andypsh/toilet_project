@@ -1,19 +1,21 @@
-# ===== Android / Kotlin =====
+# ===== Android / Kotlin (mobile/) =====
 *.iml
 .gradle/
 .kotlin/
-/local.properties
 /.idea/
 .DS_Store
 **/build/
 /captures
 .externalNativeBuild
 .cxx
+mobile/local.properties
 local.properties
 
 # ===== Firebase / 비밀 키 =====
 google-services.json
+mobile/app/google-services.json
 firebase-service-account.json
+backend/service-account.json
 firebase/functions/node_modules/
 
 # ===== Kakao =====
@@ -38,11 +40,13 @@ env/
 
 # ===== 환경 변수 / 비밀 =====
 .env
+backend/.env
 .env.local
 *.secret
 
 # ===== 데이터 파일 (재생성 가능) =====
 bidet.db
+backend/bidet.db
 *.sqlite
 *.sqlite3
 
