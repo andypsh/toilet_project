@@ -91,6 +91,35 @@ python firestore_upload.py                     # 실제 적재 (service-account.
 3. 우리 명시 비데 팩트(시청역/종로3가/서울역/롯데월드몰 등)와 매칭하여 **정확한 행정 좌표로 보강**
 4. `firestore_adapter` 가 보강된 좌표 + 출처 매핑하여 Firestore-ready JSON 생성
 
+## 🖥️ 화면 보면서 작업하기 (UI 개발)
+
+키 1개도 없이 풀앱 실행 + 즉시 미리보기 가능.
+
+### 옵션 1 — Compose Preview (빌드 없이 IDE 안에서 즉시)
+1. Android Studio에서 `mobile/` 폴더 열기
+2. `mobile/app/src/main/java/com/bidet/app/ui/preview/Previews.kt` 열기
+3. 우측 **Split / Design** 버튼 클릭
+4. ToiletCard / ToiletList / Detail 등 **다크/라이트, 검증/미검증** 변형이 즉시 렌더링됨
+5. 친구가 UI 컴포넌트 만들 때 같은 패턴으로 `@Preview` 추가 — `DemoData.toilets[N]` 활용
+
+### 옵션 2 — DEMO_MODE 풀앱 (에뮬레이터/실기기)
+`google-services.json` 이 없으면 `BuildConfig.DEMO_MODE = true` 가 자동으로 켜집니다.
+이 상태에서는 **Fake 리포지토리 + DemoData(고려대 안암 화장실 10건) + 카카오 키 없으면 리스트 fallback** 이라 어떤 키도 없이 풀앱 시연 가능.
+
+```powershell
+cd mobile
+# google-services.json 절대 두지 말기 (있으면 실 Firebase 모드로 전환됨)
+./gradlew installDebug      # 에뮬레이터 또는 USB 연결한 폰에 설치
+```
+- TopAppBar 아래에 "DEMO 모드 · 더미 데이터" 배지가 표시됨 ([MapScreen.kt:91](mobile/app/src/main/java/com/bidet/app/ui/screens/map/MapScreen.kt))
+- 카카오 키도 없으면 자동으로 **리스트 fallback 화면** 으로 전환
+
+### 옵션 3 — 카카오 키만 추가해서 실 지도 보기
+1. https://developers.kakao.com → 앱 등록 → Android 키
+2. `mobile/local.properties.example` → `mobile/local.properties` 복사
+3. `KAKAO_NATIVE_APP_KEY=발급받은키` 입력
+4. 다시 빌드 → **DEMO_MODE 그대로 + 카카오 지도가 떠서 안암 캠퍼스 화장실 10건 마커로 표시**
+
 ## 진행 대시보드
 [progress.html](progress.html) — 단계별 체크리스트 (브라우저로 열기)
 
