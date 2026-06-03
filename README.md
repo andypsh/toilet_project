@@ -16,6 +16,10 @@
 - ✅ 블로그/리뷰/SNS 명시적 언급, 공식 데이터, 정보공개청구, 사용자 제보
 - ❌ "백화점이니까 있을것" 같은 카테고리 추정
 
+## 👥 협업
+- 브랜치 전략: [BRANCHING.md](BRANCHING.md)
+- @andypsh → `feature_andy` / @dododo9511 → `feature_dodo` → `dev` → `main`
+
 ## 진행 대시보드
 [progress.html](progress.html) — 1~12 단계 체크리스트 (브라우저로 열어보세요)
 
