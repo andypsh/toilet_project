@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>서울 공중화장실 지도</title>
+  <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=cvsssp59a5"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Malgun Gothic', sans-serif; background: #f0f2f5; }
+
+    header {
+      background: #03c75a;
+      color: white;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      position: relative;
+      z-index: 10;
+    }
+    header .icon { font-size: 26px; }
+    header h1 { font-size: 19px; font-weight: 700; }
+    header span { font-size: 13px; opacity: 0.85; margin-left: 8px; }
+
+    #container {
+      display: flex;
+      height: calc(100vh - 54px);
+      position: relative;
+    }
+
+    /* ── 사이드바 패널 ── */
+    #sidebar-panel {
+      width: 320px;
+      background: white;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.12);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      transition: width 0.3s ease;
+      overflow: hidden;
+      position: relative;
+      z-index: 5;
+    }
+    #sidebar-panel.collapsed { width: 52px; }
+
+    /* 검색창 영역 */
+    #search-area {
+      flex-shrink: 0;
+      background: white;
+      border-bottom: 1px solid #e8e8e8;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 8px;
+      min-height: 52px;
+      position: relative;
+    }
+    #toggle-btn {
+      width: 32px; height: 32px;
+      border-radius: 50%; border: none;
+      background: #03c75a; color: white;
+      font-size: 14px; cursor: pointer;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+    #toggle-btn:hover { background: #02a84a; }
+    #search-wrapper {
+      flex: 1; position: relative; overflow: hidden;
+      transition: opacity 0.2s, max-width 0.3s;
+    }
+    #sidebar-panel.collapsed #search-wrapper { opacity: 0; max-width: 0; pointer-events: none; }
+    #search-input {
+      width: 100%; padding: 7px 32px 7px 12px;
+      border: 1px solid #d0d0d0; border-radius: 20px;
+      font-size: 13px; outline: none; font-family: inherit;
+    }
+    #search-input:focus { border-color: #03c75a; }
+    #clear-btn {
+      position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+      width: 18px; height: 18px; border-radius: 50%; border: none;
+      background: #bbb; color: white; font-size: 11px; cursor: pointer;
+      display: none; align-items: center; justify-content: center; line-height: 1;
+    }
+    #clear-btn.visible { display: flex; }
+
+    /* 자동완성 */
+    #autocomplete {
+      position: absolute; top: calc(100% - 2px); left: 8px; right: 8px;
+      background: white; border: 1px solid #d0d0d0; border-top: none;
+      border-radius: 0 0 12px 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      z-index: 100; overflow: hidden; display: none;
+    }
+    #autocomplete.show { display: block; }
+    .ac-item {
+      padding: 9px 14px; font-size: 13px; cursor: pointer;
+      border-bottom: 1px solid #f5f5f5;
+      display: flex; flex-direction: column; gap: 2px;
+    }
+    .ac-item:last-child { border-bottom: none; }
+    .ac-item:hover, .ac-item.selected { background: #f0fdf6; }
+    .ac-name { color: #222; font-weight: 600; }
+    .ac-name mark { background: none; color: #03c75a; font-weight: 700; }
+    .ac-addr { font-size: 11px; color: #888; }
+
+    /* 목록 영역 */
+    #list-area { flex: 1; overflow-y: auto; transition: opacity 0.2s; }
+    #sidebar-panel.collapsed #list-area { opacity: 0; pointer-events: none; }
+    #count-label { padding: 7px 14px; font-size: 12px; color: #888; border-bottom: 1px solid #f0f0f0; }
+    .item { padding: 13px 15px; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: background 0.15s; }
+    .item:hover { background: #f5fff9; }
+    .item.active { background: #e6faf0; border-left: 3px solid #03c75a; }
+    .item-title { font-size: 14px; font-weight: 700; color: #222; margin-bottom: 4px; }
+    .item-addr  { font-size: 12px; color: #666; margin-bottom: 6px; line-height: 1.4; }
+    .item-badges { display: flex; gap: 4px; flex-wrap: wrap; }
+    .badge        { font-size:11px; padding:2px 7px; border-radius:10px; background:#e6faf0; color:#00994d; font-weight:600; }
+    .badge.open   { background:#fff4e5; color:#e07000; }
+    .badge.cctv   { background:#fdecea; color:#c0392b; }
+    .badge.baby   { background:#eef3ff; color:#3b5bdb; }
+    .badge.always { background:#e8f5e9; color:#2e7d32; }
+
+    /* 지도 컨테이너 */
+    #map-wrap { flex: 1; position: relative; }
+    #map { width: 100%; height: 100%; }
+
+    /* ── 현재 위치 버튼 (우측 하단) ── */
+    #locate-btn {
+      position: absolute; bottom: 80px; right: 16px;
+      width: 46px; height: 46px;
+      border-radius: 50%; border: none;
+      background: white; color: #1a73e8;
+      font-size: 22px; cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 10; transition: background 0.2s, transform 0.15s;
+    }
+    #locate-btn:hover { background: #f0f7ff; transform: scale(1.08); }
+    #locate-btn.loading { animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    /* ── 경로 취소 버튼 ── */
+    #route-cancel-btn {
+      position: absolute; bottom: 80px; right: 70px;
+      padding: 10px 16px; border-radius: 20px; border: none;
+      background: #e53935; color: white;
+      font-size: 13px; font-weight: 700; cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      z-index: 10; display: none; align-items: center; gap: 6px;
+    }
+    #route-cancel-btn.show { display: flex; }
+
+    /* ── 경로 정보 패널 (하단) ── */
+    #route-info {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: white; border-top: 2px solid #03c75a;
+      padding: 14px 20px;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.12);
+      z-index: 10; display: none;
+      align-items: center; gap: 16px;
+    }
+    #route-info.show { display: flex; }
+    #route-info .ri-icon { font-size: 28px; }
+    #route-info .ri-body { flex: 1; }
+    #route-info .ri-title { font-size: 13px; color: #555; margin-bottom: 3px; }
+    #route-info .ri-stats { display: flex; gap: 16px; align-items: baseline; }
+    #route-info .ri-time { font-size: 22px; font-weight: 700; color: #03c75a; }
+    #route-info .ri-dist { font-size: 14px; color: #888; }
+    #route-info .ri-dest { font-size: 12px; color: #aaa; margin-top: 2px; }
+
+    /* 인포윈도우 */
+    .info-wrap  { padding:14px 16px; min-width:230px; max-width:290px; font-family:'Malgun Gothic',sans-serif; }
+    .info-title { font-size:15px; font-weight:700; color:#111; margin-bottom:8px; padding-bottom:7px; border-bottom:1px solid #eee; }
+    .info-row   { display:flex; gap:6px; font-size:12px; margin-bottom:5px; line-height:1.5; }
+    .info-label { color:#999; min-width:52px; }
+    .info-val   { color:#333; }
+    .info-badges { margin-top:8px; display:flex; gap:4px; flex-wrap:wrap; }
+    .pbadge     { font-size:11px; padding:2px 7px; border-radius:10px; font-weight:600; }
+    /* 이동하기 버튼 */
+    .nav-btn {
+      margin-top: 10px; width: 100%; padding: 9px 0;
+      background: #03c75a; color: white; border: none;
+      border-radius: 8px; font-size: 13px; font-weight: 700;
+      cursor: pointer; font-family: 'Malgun Gothic', sans-serif;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: background 0.2s;
+    }
+    .nav-btn:hover { background: #02a84a; }
+    .nav-btn:disabled { background: #aaa; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="icon">🚻</div>
+  <h1>서울 공중화장실 지도</h1>
+  <span>서울특별시 종로구 · 총 13개소</span>
+</header>
+
+<div id="container">
+  <!-- 사이드바 -->
+  <div id="sidebar-panel">
+    <div id="search-area">
+      <button id="toggle-btn" title="목록 접기/펼치기">◀</button>
+      <div id="search-wrapper">
+        <input type="text" id="search-input" placeholder="화장실명 또는 주소 검색..." autocomplete="off">
+        <button id="clear-btn" title="지우기">✕</button>
+      </div>
+      <div id="autocomplete"></div>
+    </div>
+    <div id="list-area">
+      <div id="count-label"></div>
+      <div id="list"></div>
+    </div>
+  </div>
+
+  <!-- 지도 영역 -->
+  <div id="map-wrap">
+    <div id="map"></div>
+
+    <!-- 현재 위치 버튼 -->
+    <button id="locate-btn" title="현재 위치">📍</button>
+
+    <!-- 경로 취소 버튼 -->
+    <button id="route-cancel-btn">✕ 경로 취소</button>
+
+    <!-- 경로 정보 패널 -->
+    <div id="route-info">
+      <div class="ri-icon">🚶</div>
+      <div class="ri-body">
+        <div class="ri-title">도보 이동 예상</div>
+        <div class="ri-stats">
+          <span class="ri-time" id="ri-time">--분</span>
+          <span class="ri-dist" id="ri-dist">--m</span>
+        </div>
+        <div class="ri-dest" id="ri-dest"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const data = [
+  { name:"누상동체육시설 공중화장실", addr:"서울특별시 종로구 옥인6길 26-17", type:"공중화장실", manager:"종로구청 청소행정과", phone:"221482383", hours:"상시", hoursDetail:"", maleT:1, maleU:1, femaleT:1, cctv:"N", baby:"N", lat:37.58011, lng:126.96367 },
+  { name:"종로문화체육센터", addr:"서울특별시 종로구 인왕산로1길 21", type:"개방화장실", manager:"종로구시설관리공단 건강사업부", phone:"27329393", hours:"정시", hoursDetail:"09:00~18:00", maleT:2, maleU:3, femaleT:7, cctv:"N", baby:"Y", lat:37.57428, lng:126.96468 },
+  { name:"통인시장 고객만족센터", addr:"서울특별시 종로구 자하문로 15길 18", type:"공중화장실", manager:"통인시장 상인회", phone:"27220911", hours:"정시", hoursDetail:"11:00~16:00", maleT:2, maleU:3, femaleT:4, cctv:"N", baby:"Y", lat:37.58077, lng:126.96995 },
+  { name:"보건소", addr:"서울특별시 종로구 자하문로19길 36", type:"개방화장실", manager:"종로보건소", phone:"221483520", hours:"정시", hoursDetail:"평일 09:00~18:00", maleT:7, maleU:7, femaleT:10, cctv:"N", baby:"N", lat:37.58177, lng:126.96926 },
+  { name:"광장시장(합동,화창빌딩)", addr:"서울특별시 종로구 종로 194-7", type:"개방화장실", manager:"광장시장", phone:"", hours:"정시", hoursDetail:"07:00-18:00 (일요일 휴무)", maleT:2, maleU:2, femaleT:2, cctv:"N", baby:"N", lat:37.57042, lng:126.99938 },
+  { name:"동대문역(4호선)", addr:"서울특별시 종로구 종로6가 287-1", type:"공중화장실", manager:"서울교통공사", phone:"261104211", hours:"정시", hoursDetail:"05:00~24:00", maleT:2, maleU:4, femaleT:4, cctv:"Y", baby:"N", lat:37.561159, lng:126.994398 },
+  { name:"안국역(3호선)", addr:"서울특별시 종로구 안국동 155-2", type:"공중화장실", manager:"서울교통공사", phone:"261103281", hours:"정시", hoursDetail:"05:00~24:00", maleT:4, maleU:4, femaleT:4, cctv:"Y", baby:"Y", lat:37.566412, lng:126.994185 },
+  { name:"동묘앞역(1호선)", addr:"서울특별시 종로구 숭인동 117", type:"공중화장실", manager:"서울교통공사", phone:"261101271", hours:"정시", hoursDetail:"05:00~24:00", maleT:1, maleU:2, femaleT:1, cctv:"Y", baby:"Y", lat:37.573281, lng:127.016649 },
+  { name:"버거킹(종로점)", addr:"서울특별시 종로구 종로 94", type:"개방화장실", manager:"버거킹(종로점)", phone:"", hours:"정시", hoursDetail:"09:00-24:00", maleT:1, maleU:1, femaleT:4, cctv:"N", baby:"N", lat:37.56994, lng:126.98811 },
+  { name:"인왕산 청운지구(청운공원 화장실)", addr:"서울특별시 종로구 청운동 7-3", type:"공중화장실", manager:"종로구청 도시녹지과", phone:"221482832", hours:"상시", hoursDetail:"", maleT:2, maleU:3, femaleT:5, cctv:"Y", baby:"N", lat:37.59103, lng:126.96627 },
+  { name:"허리우드극장(낙원상가4층)", addr:"서울특별시 종로구 삼일대로 428", type:"개방화장실", manager:"허리우드극장", phone:"", hours:"정시", hoursDetail:"09:30-17:00", maleT:3, maleU:5, femaleT:9, cctv:"N", baby:"N", lat:37.57258, lng:126.98781 },
+  { name:"종묘공영주차장", addr:"서울특별시 종로구 훈정동 2", type:"개방화장실", manager:"서울시설공단 주차시설운영처", phone:"222906114", hours:"정시", hoursDetail:"00:00~24:00", maleT:3, maleU:6, femaleT:3, cctv:"Y", baby:"N", lat:37.5715, lng:126.99505 },
+  { name:"동대문지하상가 화장실", addr:"서울특별시 종로구 율곡로 지하 308", type:"개방화장실", manager:"서울시시설관리공단", phone:"222906545", hours:"정시", hoursDetail:"06:00~24:00", maleT:3, maleU:5, femaleT:8, cctv:"Y", baby:"N", lat:37.57616, lng:126.99479 }
+];
+
+// ── 네이버 지도 초기화 ──
+const map = new naver.maps.Map('map', {
+  center: new naver.maps.LatLng(37.575, 126.985),
+  zoom: 14,
+  mapTypeControl: true
+});
+
+let infoWindow  = null;
+let markers     = [];
+let activeIdx   = null;
+let myLocMarker = null;   // 내 위치 마커
+let myLatLng    = null;   // 내 위치 좌표
+let routeLine   = null;   // 경로 폴리라인
+
+// ── 마커 아이콘 ──
+function makeIcon(type, active) {
+  const bg   = type === '공중화장실' ? (active ? '#0d47a1' : '#1a73e8') : (active ? '#b71c1c' : '#e53935');
+  const size = active ? 38 : 32;
+  return {
+    content: `<div style="width:${size}px;height:${size}px;background:${bg};border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2.5px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;"><span style="transform:rotate(45deg);font-size:${active?16:13}px;line-height:1;">🚻</span></div>`,
+    size: new naver.maps.Size(size, size),
+    anchor: new naver.maps.Point(size/2, size)
+  };
+}
+
+// ── 인포윈도우 HTML ──
+function infoHTML(d, idx) {
+  const badges = [];
+  if (d.type==='공중화장실') badges.push(`<span class="pbadge" style="background:#e8f0fe;color:#1565c0;">공중화장실</span>`);
+  else badges.push(`<span class="pbadge" style="background:#fdecea;color:#c62828;">개방화장실</span>`);
+  if (d.hours==='상시') badges.push(`<span class="pbadge" style="background:#e8f5e9;color:#2e7d32;">24시간</span>`);
+  if (d.cctv==='Y') badges.push(`<span class="pbadge" style="background:#fce4ec;color:#c62828;">📷 CCTV</span>`);
+  if (d.baby==='Y') badges.push(`<span class="pbadge" style="background:#eef3ff;color:#3b5bdb;">👶 기저귀교환대</span>`);
+  return `<div class="info-wrap">
+    <div class="info-title">🚻 ${d.name}</div>
+    <div class="info-row"><span class="info-label">📍 주소</span><span class="info-val">${d.addr}</span></div>
+    <div class="info-row"><span class="info-label">🕐 운영</span><span class="info-val">${d.hours}${d.hoursDetail?' · '+d.hoursDetail:''}</span></div>
+    <div class="info-row"><span class="info-label">🏢 관리</span><span class="info-val">${d.manager}</span></div>
+    ${d.phone?`<div class="info-row"><span class="info-label">📞 전화</span><span class="info-val">${d.phone}</span></div>`:''}
+    <div class="info-row"><span class="info-label">🚹 남성</span><span class="info-val">대변기 ${d.maleT}개 · 소변기 ${d.maleU}개</span></div>
+    <div class="info-row"><span class="info-label">🚺 여성</span><span class="info-val">대변기 ${d.femaleT}개</span></div>
+    <div class="info-badges">${badges.join('')}</div>
+    <button class="nav-btn" onclick="startRoute(${idx})">🚶 이동하기</button>
+  </div>`;
+}
+
+// ── 마커 활성화 ──
+function activateItem(i) {
+  if (activeIdx !== null && activeIdx !== i) {
+    markers[activeIdx].setIcon(makeIcon(data[activeIdx].type, false));
+    document.querySelectorAll('.item')[activeIdx]?.classList.remove('active');
+  }
+  activeIdx = i;
+  markers[i].setIcon(makeIcon(data[i].type, true));
+  map.panTo(new naver.maps.LatLng(data[i].lat, data[i].lng));
+
+  if (infoWindow) infoWindow.close();
+  infoWindow = new naver.maps.InfoWindow({
+    content: infoHTML(data[i], i),
+    borderWidth: 0,
+    disableAnchor: false,
+    backgroundColor: 'white',
+    borderColor: 'transparent',
+    pixelOffset: new naver.maps.Point(0, -10)
+  });
+  infoWindow.open(map, markers[i]);
+
+  const items = document.querySelectorAll('.item');
+  items.forEach(el => el.classList.remove('active'));
+  items[i]?.classList.add('active');
+  items[i]?.scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+// 마커 생성
+data.forEach((d, i) => {
+  const marker = new naver.maps.Marker({
+    position: new naver.maps.LatLng(d.lat, d.lng),
+    map,
+    icon: makeIcon(d.type, false),
+    title: d.name
+  });
+  markers.push(marker);
+  naver.maps.Event.addListener(marker, 'click', () => activateItem(i));
+});
+
+// 지도 클릭 시 닫기
+naver.maps.Event.addListener(map, 'click', () => {
+  if (infoWindow) infoWindow.close();
+  if (activeIdx !== null) {
+    markers[activeIdx].setIcon(makeIcon(data[activeIdx].type, false));
+    document.querySelectorAll('.item')[activeIdx]?.classList.remove('active');
+    activeIdx = null;
+  }
+});
+
+// ── 1. 현재 위치 버튼 ──
+document.getElementById('locate-btn').addEventListener('click', () => {
+  const btn = document.getElementById('locate-btn');
+  if (!navigator.geolocation) { alert('이 브라우저는 위치 서비스를 지원하지 않습니다.'); return; }
+  btn.classList.add('loading');
+  navigator.geolocation.getCurrentPosition(pos => {
+    btn.classList.remove('loading');
+    const lat = pos.coords.latitude;
+    const lng = pos.coords.longitude;
+    myLatLng = new naver.maps.LatLng(lat, lng);
+
+    // 기존 내 위치 마커 제거
+    if (myLocMarker) myLocMarker.setMap(null);
+
+    // 내 위치 마커 (파란 원형)
+    myLocMarker = new naver.maps.Marker({
+      position: myLatLng,
+      map,
+      icon: {
+        content: `<div style="
+          width:20px;height:20px;
+          background:#1a73e8;
+          border-radius:50%;
+          border:3px solid white;
+          box-shadow:0 0 0 4px rgba(26,115,232,0.3);
+        "></div>`,
+        size: new naver.maps.Size(20, 20),
+        anchor: new naver.maps.Point(10, 10)
+      },
+      title: '현재 위치',
+      zIndex: 200
+    });
+
+    // 지도 중심 이동 + 확대
+    map.setCenter(myLatLng);
+    map.setZoom(16);
+  }, err => {
+    btn.classList.remove('loading');
+    alert('위치를 가져올 수 없습니다. 브라우저 위치 권한을 허용해주세요.');
+  }, { enableHighAccuracy: true, timeout: 10000 });
+});
+
+// ── 2. 도보 경로 (OSRM API) ──
+async function startRoute(destIdx) {
+  const dest = data[destIdx];
+
+  if (!myLatLng) {
+    // 내 위치가 없으면 먼저 가져오기
+    if (!navigator.geolocation) { alert('위치 서비스를 지원하지 않습니다.'); return; }
+
+    const btn = document.querySelector('.nav-btn');
+    if (btn) { btn.disabled = true; btn.textContent = '위치 가져오는 중...'; }
+
+    navigator.geolocation.getCurrentPosition(pos => {
+      myLatLng = new naver.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+      if (myLocMarker) myLocMarker.setMap(null);
+      myLocMarker = new naver.maps.Marker({
+        position: myLatLng, map,
+        icon: {
+          content: `<div style="width:20px;height:20px;background:#1a73e8;border-radius:50%;border:3px solid white;box-shadow:0 0 0 4px rgba(26,115,232,0.3);"></div>`,
+          size: new naver.maps.Size(20, 20),
+          anchor: new naver.maps.Point(10, 10)
+        },
+        title: '현재 위치', zIndex: 200
+      });
+      drawRoute(destIdx);
+    }, () => alert('위치 권한을 허용해주세요.'), { enableHighAccuracy: true, timeout: 10000 });
+  } else {
+    drawRoute(destIdx);
+  }
+}
+
+async function drawRoute(destIdx) {
+  const dest = data[destIdx];
+  const fromLng = myLatLng.lng();
+  const fromLat = myLatLng.lat();
+  const toLng   = dest.lng;
+  const toLat   = dest.lat;
+
+  // 기존 경로 제거
+  clearRoute();
+
+  try {
+    // OSRM 도보 경로 API
+    const url = `https://router.project-osrm.org/route/v1/foot/${fromLng},${fromLat};${toLng},${toLat}?overview=full&geometries=geojson`;
+    const res  = await fetch(url);
+    const json = await res.json();
+
+    if (!json.routes || json.routes.length === 0) {
+      alert('경로를 찾을 수 없습니다.'); return;
+    }
+
+    const route    = json.routes[0];
+    const distM    = Math.round(route.distance);      // 미터
+    const durationS = Math.round(route.duration);     // 초
+    const walkMin  = Math.ceil(durationS / 60);
+
+    // 좌표 변환 (GeoJSON [lng,lat] → LatLng)
+    const coords = route.geometry.coordinates.map(([lng, lat]) => new naver.maps.LatLng(lat, lng));
+
+    // 경로 폴리라인 그리기
+    routeLine = new naver.maps.Polyline({
+      path: coords,
+      map,
+      strokeColor: '#1a73e8',
+      strokeWeight: 5,
+      strokeOpacity: 0.85,
+      strokeStyle: 'solid',
+      startIcon: naver.maps.PointingIcon.CIRCLE,
+      endIcon: naver.maps.PointingIcon.BLOCK_ARROW
+    });
+
+    // 경로 전체가 보이도록 지도 조정
+    const bounds = coords.reduce((b, ll) => b.extend(ll), new naver.maps.LatLngBounds(coords[0], coords[0]));
+    map.fitBounds(bounds, { top: 60, right: 40, bottom: 120, left: 40 });
+
+    // 경로 정보 패널 표시
+    const distText = distM >= 1000 ? (distM/1000).toFixed(1) + 'km' : distM + 'm';
+    document.getElementById('ri-time').textContent = walkMin + '분';
+    document.getElementById('ri-dist').textContent = distText;
+    document.getElementById('ri-dest').textContent = '목적지: ' + dest.name;
+    document.getElementById('route-info').classList.add('show');
+    document.getElementById('route-cancel-btn').classList.add('show');
+
+    if (infoWindow) infoWindow.close();
+
+  } catch (e) {
+    alert('경로를 불러오지 못했습니다. 인터넷 연결을 확인해주세요.');
+  }
+}
+
+function clearRoute() {
+  if (routeLine) { routeLine.setMap(null); routeLine = null; }
+  document.getElementById('route-info').classList.remove('show');
+  document.getElementById('route-cancel-btn').classList.remove('show');
+}
+
+document.getElementById('route-cancel-btn').addEventListener('click', clearRoute);
+
+// ── 사이드바 접기/펼치기 ──
+const sidebar   = document.getElementById('sidebar-panel');
+const toggleBtn = document.getElementById('toggle-btn');
+let collapsed   = false;
+toggleBtn.addEventListener('click', () => {
+  collapsed = !collapsed;
+  sidebar.classList.toggle('collapsed', collapsed);
+  toggleBtn.textContent = collapsed ? '▶' : '◀';
+  toggleBtn.title = collapsed ? '목록 펼치기' : '목록 접기';
+  setTimeout(() => map.autoResize(), 310);
+});
+
+// ── 자동완성 ──
+const input    = document.getElementById('search-input');
+const acBox    = document.getElementById('autocomplete');
+const clearBtn = document.getElementById('clear-btn');
+let acSelected = -1;
+let acFiltered = [];
+
+function highlight(text, q) {
+  if (!q) return text;
+  const idx = text.toLowerCase().indexOf(q.toLowerCase());
+  if (idx === -1) return text;
+  return text.slice(0, idx) + '<mark>' + text.slice(idx, idx+q.length) + '</mark>' + text.slice(idx+q.length);
+}
+
+function showAutocomplete(q) {
+  acFiltered = q ? allItems.filter(({ d }) =>
+    d.name.toLowerCase().includes(q.toLowerCase()) || d.addr.toLowerCase().includes(q.toLowerCase())
+  ).slice(0, 6) : [];
+
+  if (!acFiltered.length) { hideAutocomplete(); return; }
+
+  acBox.innerHTML = acFiltered.map(({ d }, idx) => `
+    <div class="ac-item" data-idx="${idx}">
+      <span class="ac-name">${highlight(d.name, q)}</span>
+      <span class="ac-addr">${highlight(d.addr, q)}</span>
+    </div>`).join('');
+
+  acBox.querySelectorAll('.ac-item').forEach(el => {
+    el.addEventListener('mousedown', e => {
+      e.preventDefault();
+      selectAcItem(parseInt(el.dataset.idx));
+    });
+  });
+  acSelected = -1;
+  acBox.classList.add('show');
+}
+
+function hideAutocomplete() { acBox.classList.remove('show'); acSelected = -1; }
+
+function selectAcItem(idx) {
+  const { d, i } = acFiltered[idx];
+  input.value = d.name;
+  clearBtn.classList.add('visible');
+  hideAutocomplete();
+  applySearch(d.name);
+  activateItem(i);
+}
+
+function applySearch(q) {
+  const filtered = q ? allItems.filter(({ d }) =>
+    d.name.toLowerCase().includes(q.toLowerCase()) || d.addr.toLowerCase().includes(q.toLowerCase())
+  ) : allItems;
+  allItems.forEach(({ i }) => markers[i].setMap(map));
+  allItems.filter(({ i }) => !filtered.some(f => f.i === i)).forEach(({ i }) => markers[i].setMap(null));
+  renderList(filtered);
+}
+
+input.addEventListener('input', () => {
+  const q = input.value;
+  clearBtn.classList.toggle('visible', q.length > 0);
+  showAutocomplete(q);
+  applySearch(q);
+  if (infoWindow) infoWindow.close();
+  if (activeIdx !== null) {
+    markers[activeIdx].setIcon(makeIcon(data[activeIdx].type, false));
+    activeIdx = null;
+  }
+});
+
+input.addEventListener('keydown', e => {
+  const items = acBox.querySelectorAll('.ac-item');
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    acSelected = Math.min(acSelected+1, items.length-1);
+    items.forEach((el, i) => el.classList.toggle('selected', i===acSelected));
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    acSelected = Math.max(acSelected-1, -1);
+    items.forEach((el, i) => el.classList.toggle('selected', i===acSelected));
+  } else if (e.key === 'Enter') {
+    if (acSelected >= 0 && acFiltered[acSelected]) selectAcItem(acSelected);
+    else hideAutocomplete();
+  } else if (e.key === 'Escape') {
+    hideAutocomplete(); input.blur();
+  }
+});
+
+input.addEventListener('blur', () => setTimeout(hideAutocomplete, 150));
+
+clearBtn.addEventListener('click', () => {
+  input.value = ''; clearBtn.classList.remove('visible');
+  hideAutocomplete(); applySearch(''); renderList(allItems);
+  if (infoWindow) infoWindow.close();
+  if (activeIdx !== null) {
+    markers[activeIdx].setIcon(makeIcon(data[activeIdx].type, false));
+    activeIdx = null;
+  }
+  input.focus();
+});
+
+naver.maps.Event.addListener(map, 'click', () => hideAutocomplete());
+
+// ── 사이드바 목록 렌더링 ──
+function renderList(filtered) {
+  const list = document.getElementById('list');
+  document.getElementById('count-label').textContent = `총 ${filtered.length}개 화장실`;
+  list.innerHTML = '';
+  filtered.forEach(({ d, i }) => {
+    const el = document.createElement('div');
+    el.className = 'item';
+    const badges = [];
+    if (d.type==='공중화장실') badges.push(`<span class="badge">공중</span>`);
+    else badges.push(`<span class="badge open">개방</span>`);
+    if (d.hours==='상시') badges.push(`<span class="badge always">24시간</span>`);
+    if (d.cctv==='Y') badges.push(`<span class="badge cctv">CCTV</span>`);
+    if (d.baby==='Y') badges.push(`<span class="badge baby">기저귀교환대</span>`);
+    el.innerHTML = `
+      <div class="item-title">${d.name}</div>
+      <div class="item-addr">${d.addr}</div>
+      <div class="item-badges">${badges.join('')}</div>
+    `;
+    el.addEventListener('click', () => activateItem(i));
+    list.appendChild(el);
+  });
+}
+
+const allItems = data.map((d, i) => ({ d, i }));
+renderList(allItems);
+</script>
+</body>
+</html>
