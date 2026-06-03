@@ -35,7 +35,7 @@ import com.bidet.app.ui.theme.BidetAppTheme
  * 빌드 없이 즉시 렌더링됩니다.
  *
  * 친구 (UI 작업) 가이드:
- *  - mobile/app/src/main/java/com/bidet/app/ui/screens/{화면}/*.kt 를 열면
+ *  - mobile/app/src/main/java/com/bidet/app/ui/screens/(화면)/(파일).kt 를 열면
  *    파일 안의 @Preview composable 이 우측 패널에 그려집니다.
  *  - 새 컴포넌트 만들 때는 이 파일을 참고해서 같이 @Preview 추가하기.
  *  - 데이터는 com.bidet.app.data.demo.DemoData 활용.
