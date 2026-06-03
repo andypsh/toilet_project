@@ -11,6 +11,9 @@
 /mobile/app/src/main/java/com/bidet/app/ui/             @dododo9511
 /mobile/app/src/main/res/                               @dododo9511
 
+# ───────── 친구가 수집한 자료 — @dododo9511 ─────────
+/dodo_data/                                             @dododo9511
+
 # ───────── 백엔드 (데이터·Repository·Firestore) — @andypsh ─────────
 /backend/                                               @andypsh
 /mobile/app/src/main/java/com/bidet/app/data/           @andypsh
