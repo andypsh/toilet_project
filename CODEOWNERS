@@ -12,7 +12,7 @@
 /mobile/app/src/main/res/                               @dododo9511
 
 # ───────── 친구가 수집한 자료 — @dododo9511 ─────────
-/dodo_data/                                             @dododo9511
+/backend/dodo_data/                                     @dododo9511
 
 # ───────── 백엔드 (데이터·Repository·Firestore) — @andypsh ─────────
 /backend/                                               @andypsh

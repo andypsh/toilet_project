@@ -19,14 +19,16 @@ toilet_project/
 │   └── scripts/
 │
 ├── backend/         ← 데이터 수집 파이프라인 (Python) — @andypsh 전담
-│   ├── collectors/             (네이버 검색·공공데이터·사용자 제보)
+│   ├── collectors/             (네이버·공공데이터·사용자제보·서울마스터)
+│   │   └── seoul_master.py     ★ 친구 CSV 콜라보 (좌표 매칭 보강)
+│   ├── dodo_data/              ★ @dododo9511 자료실 (서울 공중화장실 5,656건)
 │   ├── pipeline.py             (오케스트레이터 CLI)
 │   ├── extractor.py            (LLM 추출, Claude API)
 │   ├── geocoder.py             (카카오 로컬 API)
 │   ├── firestore_adapter.py    (SQLite → Firestore Toilet 변환)
 │   ├── firestore_upload.py     (firebase-admin 적재)
 │   ├── seed_real.py            (실데이터 시드)
-│   ├── update_coords.py        (좌표 보강)
+│   ├── update_coords.py        (알려진 좌표 fill)
 │   ├── config.py, db.py, _console.py
 │   ├── requirements.txt, .env.example
 │   ├── locations.json          (현재 export)
@@ -75,12 +77,19 @@ cp local.properties.example local.properties   # 카카오 키 채우기
 cd backend
 pip install -r requirements.txt
 cp .env.example .env                            # API 키 채우기 (선택)
-python seed_real.py                             # 실데이터 14건 시드
+python seed_real.py                             # 실데이터 14건 시드 (크롬 자동화 수집)
 python update_coords.py                         # 알려진 좌표 fill
+python pipeline.py collect-seoul                # ★ 친구 CSV 적재 + 좌표 매칭 보강
 python firestore_adapter.py                    # SQLite → Firestore JSON
 python firestore_upload.py --dry-run           # 검증
 python firestore_upload.py                     # 실제 적재 (service-account.json 필요)
 ```
+
+### 콜라보 흐름 (프론트 ↔ 백)
+1. **@dododo9511** 가 행안부 표준 CSV → `backend/dodo_data/` 에 자료 업로드
+2. **@andypsh** 가 `python pipeline.py collect-seoul` 실행 → `seoul_master` 테이블(4,976건)에 적재
+3. 우리 명시 비데 팩트(시청역/종로3가/서울역/롯데월드몰 등)와 매칭하여 **정확한 행정 좌표로 보강**
+4. `firestore_adapter` 가 보강된 좌표 + 출처 매핑하여 Firestore-ready JSON 생성
 
 ## 진행 대시보드
 [progress.html](progress.html) — 단계별 체크리스트 (브라우저로 열기)
